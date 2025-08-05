@@ -1,0 +1,26 @@
+{
+  "name": "legal_link",
+  "version": "1.0.0",
+  "description": "\"description\": \"A full-stack Lawyer–Client Connector Platform that allows clients to find, connect with, and book consultations with qualified lawyers based on specialization and location. Built with Node.js, Express, and PostgreSQL.\",",
+  "main": "app.js",
+  "type":"module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lawyer",
+    "client",
+    "legal",
+    "express",
+    "postgres",
+    "fullstack"
+  ],
+  "author": "Bisrat",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.32.0"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
