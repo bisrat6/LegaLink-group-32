@@ -1,0 +1,31 @@
+.nav-link {
+  color: #ffffff;        /* link color */
+  text-decoration: none; /* remove underline */
+  font-weight: bold;
+  margin: 0 10px;
+  font-size: 18px;
+}
+
+.nav-link:hover {
+  color: #0056b3;        /* darker on hover */
+  text-decoration: underline;
+}
+nav{
+    float: right;
+    margin-top: 20px;
+}
+.nav-link-login{
+    padding: 5px 10px;
+}
+.login-button{
+    padding: 5px 20px;
+    background-color: rgb(52, 248, 52);
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 5px;
+}
+.login-button:hover{
+    background-color: rgb(2, 108, 2);
+}

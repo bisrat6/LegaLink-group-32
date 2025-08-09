@@ -1,0 +1,30 @@
+
+body{
+
+  height: 100vh;
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+    url('../images/background2.avif');
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+
+
+.wel-paragraph{
+    font-size: 1.8rem;
+    margin-top: 150px;
+}
+.reason-paragraph{
+    font-size: 3rem;
+    font-weight: bold;
+}
+.readmore-button{
+    border: 3px solid rgb(179, 134, 2);
+    color: white;
+    background-color: transparent;
+    padding: 17px 35px;
+    margin-left: 50px;
+    margin-bottom: 50px;
+}

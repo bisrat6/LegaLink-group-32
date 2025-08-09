@@ -1,0 +1,81 @@
+.sec-page1{
+  height: 100vh;
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('../images/background4.avif');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  height: 500px;
+}
+@media (min-width: 915px){
+    .flex-section{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+.sec-page2{
+    background-color: rgb(255, 255, 255);
+    height: 600px;
+    color: black;
+    font-family: roboto;
+    
+}
+.sec-page1 h1{
+    font-size: 5rem;
+    font-weight: bold;
+    margin-top: 200px;
+
+}
+.sec-page2 h2{
+    
+    font-size: 3rem;
+    padding: 50px 0 20px 30px ;
+}
+.sec-page2 h5{
+    margin-left: 30px;
+    font-size: 18px;
+}
+.sec-page2 p{
+    margin-left: 30px;
+    font-size: 16px;
+}
+.inline-input {
+  border: none;       
+  border-bottom: 1px solid #000; 
+  outline: none;         
+  padding: 4px 0;    
+  font-size: 16px;
+  padding: 10px 10px;
+  width: 100%;
+  margin: 0 100px 0 20px;
+
+}
+a{
+    color: black;
+}
+
+.line-input:focus {
+  border-bottom-color: blue; 
+}
+.necessary-note {
+  color: red;        
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 4px; 
+
+}
+
+.name-paragraph {
+  font-size: 16px;
+  margin: 0;
+}
+.submit-button{
+    padding: 10px 35px;
+    color: rgb(234, 149, 22);
+    background-color: white;
+    border: 3px solid rgb(234, 149, 22);
+    margin: 20px 300px;
+}
+
+

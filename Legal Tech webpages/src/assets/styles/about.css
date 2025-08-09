@@ -1,0 +1,36 @@
+.sec-page1{
+  height: 100vh;
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('../images/background5.avif');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  height: 500px;
+}
+.sec-page2{
+    background-color: rgb(234, 233, 233);
+    height: 1250px;
+    color: black;
+    font-family: roboto;
+    
+}
+.sec-page1 h1{
+    font-size: 5rem;
+    font-weight: bold;
+    margin-top: 200px;
+
+}
+.sec-page2 h2{
+    
+    font-size: 3rem;
+    padding: 50px 0 20px 30px ;
+}
+.sec-page2 h5{
+    margin-left: 30px;
+    font-size: 18px;
+}
+.sec-page2 p{
+    margin-left: 30px;
+    font-size: 16px;
+}
