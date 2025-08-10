@@ -1,17 +1,16 @@
-const express=require('express');
+const express = require('express');
 
-const applicationController=require('./../controllers/applicationController');
+const applicationController = require('../controllers/applicationController');
 
-const router=express.Router();
+const router = express.Router();
 
-router.route("/")
-.get(applicationController.getAllApplication)
-.post(applicationController.ApplyApplication);
+router
+  .route('/')
+  .get(applicationController.getAllApplication)
+  .post(applicationController.ApplyApplication);
 
-router.route("/:id")
-.get(applicationController.getApplication);
+router.route('/:id').get(applicationController.getApplication);
 
-router.route("/:id/status")
-.patch(applicationController.AcceptApplication);
+router.route('/:id/status').patch(applicationController.AcceptApplication);
 
-module.exports=router;
+module.exports = router;

@@ -1,17 +1,17 @@
-const express=require('express');
+const express = require('express');
 
-const caseController=require('./../controllers/caseController');
+const caseController = require('../controllers/caseController');
 
-const router=express.Router();
+const router = express.Router();
 
+// router.param('id', caseController.checkId);
 
-router.route("/")
-.get(caseController.getAllCases)
-.post(caseController.postCase);
+router.route('/').get(caseController.getAllCases).post(caseController.postCase);
 
-router.route("/:id")
-.get(caseController.getCase)
-.patch(caseController.updateCase)
-.delete(caseController.deleteCase);
+router
+  .route('/:id')
+  .get(caseController.getCase)
+  .patch(caseController.updateCase)
+  .delete(caseController.deleteCase);
 
-module.exports= router;
+module.exports = router;
