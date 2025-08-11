@@ -1,5 +1,6 @@
 const query = require('../models/lawyerModel');
 
+//client can get all lawyers
 exports.getAllLawyers = async (req, res) => {
   const result = await query.getAll();
   res.status(200).json({
@@ -10,6 +11,7 @@ exports.getAllLawyers = async (req, res) => {
   });
 };
 
+//lawyer profile creation
 exports.createLawyerProfile = async (req, res) => {
   const id = 6;
   await query.createProfile(req.body, id);
@@ -19,6 +21,7 @@ exports.createLawyerProfile = async (req, res) => {
   });
 };
 
+//client get lawyers by their id
 exports.getLawyer = async (req, res) => {
   const id = req.params.id * 1;
   const result = await query.getLawyer(id);
@@ -30,58 +33,64 @@ exports.getLawyer = async (req, res) => {
   });
 };
 
+//lawyer can update their profile
 exports.updateLawyerProfile = async (req, res) => {
-  const id = 6;
-  const {
-    licenseNumber,
-    barAssociation,
-    yearOfExperience,
-    consultationFee,
-    bio,
-    education,
-    languageSpoken,
-  } = req.body;
+  const id = 6; // Hardcoded? Consider getting from req.params or auth
+
+  // Mapping of body keys to DB column names
+  const lawyerProfileFields = {
+    licenseNumber: 'license_number',
+    barAssociation: 'bar_association',
+    yearOfExperience: 'years_of_experience',
+    consultationFee: 'consultation_fee',
+    bio: 'bio',
+    education: 'education',
+    languageSpoken: 'languages_spoken',
+  };
+
+  const userFields = {
+    country: 'country',
+    firstName: 'first_name',
+    lastName: 'last_name',
+    phone: 'phone',
+    email: 'email',
+    password: 'password',
+    dateOfBirth: 'date_of_birth',
+    city: 'city',
+    state: 'state',
+    address: 'address',
+  };
+
   const updates = [];
   const values = [];
-  let i = 1;
-  if (licenseNumber) {
-    updates.push(`license_number=$${i++}`);
-    values.push(licenseNumber);
+
+  let index = 1;
+
+  // Build updates for lawyer_profiles
+  for (const [key, column] of Object.entries(lawyerProfileFields)) {
+    if (req.body[key] !== undefined) {
+      updates.push(`${column}=$${index++}`);
+      values.push(req.body[key]);
+    }
   }
-  if (barAssociation) {
-    updates.push(`bar_association=$${i++}`);
-    values.push(barAssociation);
+  index = 1;
+  // Build updates for users
+  for (const [key, column] of Object.entries(userFields)) {
+    if (req.body[key] !== undefined) {
+      updates.push(`${column}=$${index++}`);
+      values.push(req.body[key]);
+    }
   }
-  if (yearOfExperience) {
-    updates.push(`years_of_experience=$${i++}`);
-    values.push(yearOfExperience);
-  }
-  if (consultationFee) {
-    updates.push(`consultation_fee=$${i++}`);
-    values.push(consultationFee);
-  }
-  if (bio) {
-    updates.push(`bio=$${i++}`);
-    values.push(bio);
-  }
-  if (education) {
-    updates.push(`education=$${i++}`);
-    values.push(education);
-  }
-  if (languageSpoken) {
-    updates.push(`languages_spoken=$${i++}`);
-    values.push(languageSpoken);
-  }
-  console.log(updates);
+
   const result = await query.updateProfile(updates, values, id);
+
   res.status(201).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 };
 
+//client can filter lawyers
 exports.filterLawyer = async (req, res) => {
   const result = await query.searchLawyer(req.query);
   res.status(200).json({
@@ -92,6 +101,7 @@ exports.filterLawyer = async (req, res) => {
   });
 };
 
+// it is only for the admin
 exports.verfiyLawyer = (req, res) => {
   res.status(500).json({
     status: 'error',

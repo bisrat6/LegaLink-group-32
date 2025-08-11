@@ -45,12 +45,13 @@ exports.postCase = async (clientId, profile) => {
 
 exports.getCase = async (caseId) => {
   const result = await db.query(
-    ` SELECT
-     c.*, user.user_first_name, user.country,user.phone,user.email
-      FROM cases c 
-      JOIN user 
-      ON c.client_id=user.user_id
-      WHERE c.case_id=$1`,
+    `SELECT
+    c.*, users.first_name, users.country, users.phone, users.email
+  FROM cases c
+  JOIN users
+    ON c.client_id = users.user_id
+  WHERE c.case_id = $1
+  `,
     [caseId],
   );
   return result.rows;

@@ -5,12 +5,16 @@ const applicationController = require('../controllers/applicationController');
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/cases/:caseId/applications')
   .get(applicationController.getAllApplication)
   .post(applicationController.ApplyApplication);
 
-router.route('/:id').get(applicationController.getApplication);
+router
+  .route('/lawyers/:lawyerId/applications')
+  .get(applicationController.getApplicationBylawer);
 
-router.route('/:id/status').patch(applicationController.AcceptApplication);
+router
+  .route('/applications/:applicationId')
+  .patch(applicationController.AcceptApplication);
 
 module.exports = router;

@@ -43,16 +43,32 @@ exports.createProfile = async (profile, id) => {
 };
 
 exports.updateProfile = async (updates, values, id) => {
+  const update1 = updates.slice(0, 7);
+  const values1 = values.slice(0, 7);
+  const update2 = updates.slice(7);
+  const values2 = values.slice(7);
+
   const result = await db.query(
     `
   UPDATE lawyer_profiles
-  SET ${updates.join(', ')}
+  SET ${update1.join(', ')}
   WHERE user_id = ${id}
   RETURNING *
 `,
-    values,
+    values1,
   );
-  return result.rows;
+
+  const result2 = await db.query(
+    `
+  UPDATE users
+  SET ${update2.join(', ')}
+  WHERE user_id = ${id}
+  RETURNING *
+`,
+    values2,
+  );
+
+  return { ...result.rows[0], ...result2.rows[0] };
 };
 
 exports.searchLawyer = async (query) => {

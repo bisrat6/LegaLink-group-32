@@ -3,11 +3,7 @@ const clientController = require('../controllers/clientController');
 
 const router = express.Router();
 
-router
-  .route('/:id')
-  .get(clientController.getClient)
-  .patch(clientController.updateClient);
-
-router.route('/').post(clientController.createClientProfile);
+router.route('/:id').get(clientController.getClient);
+router.route('/').patch(clientController.updateClient);
 
 module.exports = router;

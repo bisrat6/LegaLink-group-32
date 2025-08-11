@@ -5,6 +5,7 @@ const caseRoute = require('./routes/caseRoute');
 const lawyerRoute = require('./routes/lawyerRoute');
 const applicationRoute = require('./routes/applicationRoute');
 const clientRoute = require('./routes/clientRoute');
+const userRoute = require('./routes/userRoute');
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.use((req, res, next) => {
 
 app.use('/api/cases', caseRoute);
 app.use('/api/lawyers', lawyerRoute);
-app.use('/api/applications', applicationRoute);
+app.use('/api', applicationRoute);
 app.use('/api/clients', clientRoute);
+app.use('/api/user', userRoute);
 
 module.exports = app;
