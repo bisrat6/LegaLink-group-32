@@ -1,7 +1,7 @@
 
-import '../../assets/styles/home.css';
-import '../../assets/styles/Navbar.css';
-import '../../assets/styles/footer.css';
+import '../../assets/styles/homepage/home.css';
+import '../../assets/styles/component/Navbar.css';
+import '../../assets/styles/component/footer.css';
 import Header from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx';
 function Home(){

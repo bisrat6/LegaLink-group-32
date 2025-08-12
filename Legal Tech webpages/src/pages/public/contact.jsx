@@ -1,12 +1,12 @@
-import '../../assets/styles/Navbar.css';
-import '../../assets/styles/footer.css';
-import '../../assets/styles/contact.css';
+import '../../assets/styles/component/Navbar.css';
+import '../../assets/styles/component/footer.css';
+import '../../assets/styles/homepage/contact.css';
 import Header from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 function Contact(){
 return (
     <>
-      <section className='sec-page1'>
+      <section className='sec-page3'>
         <Header />
 <h1>Contact</h1>
   </section>
@@ -32,7 +32,7 @@ return (
                 </div>
                 </div>
   </section>
-    <section className='sec-page2'>
+    <section className='sec-page4'>
     
   
 <h2>Message Us</h2>

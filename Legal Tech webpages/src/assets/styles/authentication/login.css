@@ -1,0 +1,73 @@
+.forget{
+    color: blue;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 10px;
+}
+.register-par{
+    text-align: center;
+    font-size: 18px;
+}
+.register{
+    color: red;
+    text-decoration: none;
+}
+.forget:hover{
+    color: rgb(87, 140, 253);
+}
+.login-page {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  min-height: 100vh;       /* Full page height */
+ 
+  vertical-align: center;
+}
+
+.login-page .login-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  color: black;
+width: 600px;
+ 
+}
+
+h2{
+    text-align: center;
+}
+label{
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.data-input-div{
+    margin-left: 30px;
+}
+input{
+    background-color: rgb(233, 232, 232);
+    border: 1px solid rgb(227, 227, 227);
+    width: 500px;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 16px;
+    margin-top: 5px;
+}
+form {
+  width: auto !important; /* or 100% */
+  max-width: 600px;        /* optional for responsiveness */
+}
+
+.submit{
+   width: 530px;
+   border-radius: 5px;
+   background-color: green; 
+   margin-left: 30px;
+   padding: 10px;
+   margin-top: 20px;
+   border: none;
+   color: white;
+   font-size: 16px;
+}

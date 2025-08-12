@@ -1,8 +1,8 @@
-.sec-page1{
+.sec-page3{
   height: 100vh;
   background-image: 
     linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-    url('../images/background4.avif');
+    url('../../images/background3.avif');
   background-size: cover;
   background-position: center;
   color: white;
@@ -14,14 +14,22 @@
         grid-template-columns: 1fr 1fr;
     }
 }
-.sec-page2{
+.sec-page2, .sec-page4{
     background-color: rgb(255, 255, 255);
-    height: 600px;
+    height: 530px;
     color: black;
     font-family: roboto;
     
+    
 }
-.sec-page1 h1{
+.sec-page2{
+margin-top: -50px;
+margin-bottom: 30px;
+}
+.sec-page4{
+  padding-top: 20px;
+}
+.sec-page3 h1{
     font-size: 5rem;
     font-weight: bold;
     margin-top: 200px;

@@ -11,9 +11,12 @@
   text-decoration: underline;
 }
 nav{
+  display: flex;
     float: right;
+    justify-content: space-between;
     margin-top: 20px;
 }
+
 .nav-link-login{
     padding: 5px 10px;
 }

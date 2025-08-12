@@ -1,12 +1,14 @@
 import { useState } from 'react';
-
+import '../../assets/styles/authentication/login.css'
+import Header from '../components/Navbar.jsx';
+import Footer from '../components/Footer.jsx';
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); //this will stop from reloading it as default when you submit so we give this to form
 
     // Simple fake check (replace with API call)
     if (username === 'user' && password === 'pass') {
@@ -17,24 +19,41 @@ function Login({ onLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input
+   <>
+    <Header />
+    <div className='login-page'>
+ <form onSubmit={handleSubmit}>
+      <div className='login-form'>
+<h2>Login</h2>
+      <div className='data-input-div'>
+        <label htmlFor="email">Email Address</label>
+        <input
         type="text"
         placeholder="Username"
         value={username}
         onChange={e => setUsername(e.target.value)}
-      /><br/>
-      <input
+      />
+      </div>
+    <div className='data-input-div'>
+      <label htmlFor="password">password</label>
+       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
-      /><br/>
-      <button type="submit">Login</button>
+      />
+    </div>
+      <button type="submit" className='submit'><a href="/dashboard">Login</a></button>
+      <a className='forget' href="/forget">Forget your password?</a>
+      <p className='register-par'>Don't have an account? <a className='register' href="/RegisterClient">Register</a></p>
       {error && <p style={{color:'red'}}>{error}</p>}
+      </div>
+      
     </form>
+    </div>
+   <Footer/>
+   </>
   );
 }
 
-export default Login;
+export default Login

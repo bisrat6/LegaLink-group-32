@@ -1,0 +1,37 @@
+.search-lawyer {
+  padding: 20px;
+  margin-top: 40px;
+  
+  
+}
+
+.search-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-filters input, .search-filters select {
+  padding: 8px;
+}
+
+.results {
+  display: grid;
+  gap: 10px;
+  
+}
+
+.lawyer-card {
+  padding: 10px;
+  border: 1px solid #ccc;  
+  
+}
+.lawyer-card p {
+  color: white;
+}
+nav{
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+

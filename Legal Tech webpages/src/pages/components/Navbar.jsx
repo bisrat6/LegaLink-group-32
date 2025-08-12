@@ -1,5 +1,5 @@
 
-import '../../assets/styles/home.css';
+import '../../assets/styles/homepage/home.css';
 import logoImage from '../../assets/icons/logo.jpg';
 
 function Header () {
@@ -7,7 +7,7 @@ function Header () {
         <header>
             
            
-                 <a href="">
+                 <a href="/">
                  <div className='logo-container'>    
             <div className='logo-image'>
                 
