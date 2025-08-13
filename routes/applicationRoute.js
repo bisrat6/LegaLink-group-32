@@ -17,4 +17,8 @@ router
   .route('/applications/:applicationId')
   .patch(applicationController.AcceptApplication);
 
+router
+  .route('/applications/:applicationId/reject')
+  .patch(applicationController.rejectApplication);
+
 module.exports = router;

@@ -4,6 +4,8 @@ const caseController = require('../controllers/caseController');
 
 const router = express.Router();
 
+// Advanced filter route
+
 // router.param('id', caseController.checkId);
 
 router.route('/').get(caseController.getAllCases).post(caseController.postCase);

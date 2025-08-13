@@ -1,16 +1,23 @@
-// const fs = require('fs');
+const e = require('express');
 const query = require('../models/caseModel');
 
 //this routes is hit by the lawyer so it gives all open cases with his specialization, Not all cases in the data base.
 exports.getAllCases = async (req, res) => {
-  const id = 2;
-  const result = await query.getAllCases(id);
-  res.status(200).json({
-    status: 'success',
-    data: {
-      result,
-    },
-  });
+  try {
+    // const id = 3;
+    const result = await query.getAllCases(req.query);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
 };
 
 //this route is hit by the client to post his case

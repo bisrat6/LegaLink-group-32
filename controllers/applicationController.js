@@ -38,7 +38,7 @@ const query = require('../models/applicationModel');
 exports.getAllApplication = async (req, res) => {
   const caseId = req.params.caseId * 1;
   try {
-    const applications = await query.getAllApplications(caseId);
+    const applications = await query.getAllApplications(caseId, req.query);
     res.status(200).json({
       status: 'success',
       data: {
@@ -81,7 +81,10 @@ exports.ApplyApplication = async (req, res) => {
 exports.getApplicationBylawer = async (req, res) => {
   const lawyerId = req.params.lawyerId * 1;
   try {
-    const applications = await query.getApplicationsByLawyer(lawyerId);
+    const applications = await query.getApplicationsByLawyer(
+      lawyerId,
+      req.query,
+    );
     res.status(200).json({
       status: 'success',
       data: {
@@ -106,12 +109,29 @@ exports.AcceptApplication = async (req, res) => {
       data: {
         application,
       },
+      message: 'Your application is accepted!',
     });
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     res.status(500).json({
       status: 'error',
       message: 'This route is not defined',
+    });
+  }
+};
+
+exports.rejectApplication = async (req, res) => {
+  const applicationId = req.params.applicationId * 1;
+  try {
+    const application = await query.rejectApplication(applicationId);
+    res.status(200).json({
+      status: 'success',
+      data: { application },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Could not reject application',
     });
   }
 };

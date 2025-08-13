@@ -2,7 +2,7 @@ const query = require('../models/lawyerModel');
 
 //client can get all lawyers
 exports.getAllLawyers = async (req, res) => {
-  const result = await query.getAll();
+  const result = await query.getAllLawyers(req.query);
   res.status(200).json({
     status: 'success',
     data: {
