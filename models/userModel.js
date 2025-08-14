@@ -1,67 +1,62 @@
 const db = require('./db');
+const catchAsync = require('../utils/catchAsync');
 
-exports.createUser = async (profile) => {
-  try {
-    const {
-      email,
-      password,
-      firstName,
-      lastName,
-      phone,
-      dateOfBirth,
-      address,
-      city,
-      state,
-      zipCode,
-      country,
-      role,
-    } = profile;
+exports.createUser = catchAsync(async (profile) => {
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    phone,
+    dateOfBirth,
+    address,
+    city,
+    state,
+    zipCode,
+    country,
+    role,
+  } = profile;
 
-    const values = [
-      email,
-      password,
-      firstName,
-      lastName,
-      phone,
-      dateOfBirth,
-      address,
-      city,
-      state,
-      zipCode,
-      country,
-      role,
-    ];
+  const values = [
+    email,
+    password,
+    firstName,
+    lastName,
+    phone,
+    dateOfBirth,
+    address,
+    city,
+    state,
+    zipCode,
+    country,
+    role,
+  ];
 
-    const result = await db.query(
-      `
+  const result = await db.query(
+    `
       INSERT INTO users 
         (email, password_hash, first_name, last_name, phone, date_of_birth, address, city, state, zip_code, country, role) 
       VALUES
         ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
       RETURNING *;
       `,
-      values,
-    );
+    values,
+  );
 
-    return result.rows;
-  } catch (error) {
-    console.error('Error in createUser:', error);
-    throw error;
-  }
-};
+  return result.rows;
+});
 
 // continue here
 
-exports.getProfile = async (id) => {
-  try {
-    const result = await db.query(`SELECT * FROM users WHERE user_id=$1`, [id]);
+exports.getProfile = catchAsync(async (id) => {
+  const result = await db.query(`SELECT * FROM users WHERE user_id=$1`, [id]);
 
-    const basicProfile = result.rows[0];
-    let detailsRes;
+  const basicProfile = result.rows[0];
+  let detailsRes;
 
-    if (basicProfile.role === 'lawyer') {
-      detailsRes = await db.query(
-        `
+  if (basicProfile.role === 'lawyer') {
+    detailsRes = await db.query(
+      `
         SELECT 
           lp.profile_id,
           lp.license_number,
@@ -97,27 +92,23 @@ exports.getProfile = async (id) => {
           lp.certifications, lp.languages_spoken, lp.availability_schedule,
           lp.average_rating, lp.total_reviews;
       `,
-        [id],
-      );
-    } else {
-      detailsRes = await db.query(
-        `
+      [id],
+    );
+  } else {
+    detailsRes = await db.query(
+      `
         SELECT c.* 
         FROM users u
         LEFT JOIN cases c
           ON u.user_id = c.client_id
         WHERE u.user_id = $1
       `,
-        [id],
-      );
-    }
-
-    return {
-      basic: basicProfile,
-      details: detailsRes.rows,
-    };
-  } catch (error) {
-    console.error('Error in getProfile:', error);
-    throw error;
+      [id],
+    );
   }
-};
+
+  return {
+    basic: basicProfile,
+    details: detailsRes.rows,
+  };
+});

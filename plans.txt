@@ -1,3 +1,4 @@
 The update for case works if is only open!! so it should be checked whether it is open or not in the updateCaseModule. 
 client ongoing cases can be only seen if they are allowed by the client so i add isHidden flag on cases table in the db.
 open cases are always visible.
+address the duplicate errors like licence number and case_id and lawyer id unique for specific case

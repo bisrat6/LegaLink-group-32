@@ -1,19 +1,23 @@
 const query = require('../models/clientModel');
-
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 //used by the lawyers
-exports.getClient = async (req, res) => {
+exports.getClient = catchAsync(async (req, res) => {
   const id = req.params.id * 1;
   const result = await query.getClient(id);
+  if (!result) {
+    throw new AppError('No client found with that ID', 404);
+  }
   res.status(200).json({
     status: 'success',
     data: {
       result,
     },
   });
-};
+});
 
 // used by clients
-exports.updateClient = async (req, res) => {
+exports.updateClient = catchAsync(async (req, res) => {
   const id = 6;
   const userFields = {
     country: 'country',
@@ -41,12 +45,14 @@ exports.updateClient = async (req, res) => {
   }
 
   const result = await query.updateClient(updates, values, id);
-
+  if (!result) {
+    throw new AppError('No client found with that ID', 404);
+  }
   res.status(201).json({
     status: 'success',
     data: result,
   });
-};
+});
 
 // exports.createClientProfile = async (req, res) => {
 //   const result = await query.createClient(req.body);

@@ -1,4 +1,5 @@
 const query = require('../models/applicationModel');
+const catchAsync = require('../utils/catchAsync');
 
 // 1. Apply to a Case (Lawyer applies)
 // POST /cases/:caseId/applications
@@ -34,104 +35,61 @@ const query = require('../models/applicationModel');
 
 // Action: Lawyer withdraws their application
 
-//get all applications from lawyers applied for the case
-exports.getAllApplication = async (req, res) => {
+//get all applications from lawyers to a client applied for the case
+exports.getAllApplication = catchAsync(async (req, res) => {
   const caseId = req.params.caseId * 1;
-  try {
-    const applications = await query.getAllApplications(caseId, req.query);
-    res.status(200).json({
-      status: 'success',
-      data: {
-        applications,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not defined',
-    });
-  }
-};
+  const applications = await query.getAllApplications(caseId, req.query);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      applications,
+    },
+  });
+});
 
 //lawyers apply for cases
-exports.ApplyApplication = async (req, res) => {
+exports.ApplyApplication = catchAsync(async (req, res) => {
   const lawyerId = 7; //later change to req.user.id
   const caseId = req.params.caseId * 1;
-  try {
-    const application = await query.applyApplication(
-      caseId,
-      lawyerId,
-      req.body,
-    );
-    res.status(201).json({
-      status: 'success',
-      data: {
-        application,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not defined',
-    });
-  }
-};
+  const application = await query.applyApplication(caseId, lawyerId, req.body);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      application,
+    },
+  });
+});
 
-//lawyers get all applications for a case
-exports.getApplicationBylawer = async (req, res) => {
+//lawyers get all applications
+exports.getApplicationBylawer = catchAsync(async (req, res) => {
   const lawyerId = req.params.lawyerId * 1;
-  try {
-    const applications = await query.getApplicationsByLawyer(
-      lawyerId,
-      req.query,
-    );
-    res.status(200).json({
-      status: 'success',
-      data: {
-        applications,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not defined',
-    });
-  }
-};
+  const applications = await query.getApplicationsByLawyer(lawyerId, req.query);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      applications,
+    },
+  });
+});
 
 // acceptance to the lawyer
-exports.AcceptApplication = async (req, res) => {
+exports.AcceptApplication = catchAsync(async (req, res) => {
   const applicationId = req.params.applicationId * 1;
-  try {
-    const application = await query.acceptApplication(applicationId);
-    res.status(200).json({
-      status: 'success',
-      data: {
-        application,
-      },
-      message: 'Your application is accepted!',
-    });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not defined',
-    });
-  }
-};
+  const application = await query.acceptApplication(applicationId);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      application,
+    },
+    message: 'Your application is accepted!',
+  });
+});
 
-exports.rejectApplication = async (req, res) => {
+exports.rejectApplication = catchAsync(async (req, res) => {
   const applicationId = req.params.applicationId * 1;
-  try {
-    const application = await query.rejectApplication(applicationId);
-    res.status(200).json({
-      status: 'success',
-      data: { application },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'Could not reject application',
-    });
-  }
-};
+  const application = await query.rejectApplication(applicationId);
+  res.status(200).json({
+    status: 'success',
+    data: { application },
+  });
+});

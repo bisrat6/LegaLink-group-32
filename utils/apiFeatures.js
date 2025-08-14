@@ -53,6 +53,7 @@ class APIFeatures {
       const sortBy = this.queryString.sort
         .split(',')
         .map((f) => f.trim())
+        .filter(f => /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(f)) // Only allow valid column names
         .join(', ');
       this.sortStr = `ORDER BY ${sortBy}`;
     } else {
@@ -67,7 +68,7 @@ class APIFeatures {
       ? this.queryString.fields
           .split(',')
           .map((f) => f.trim())
-          .filter((f) => allowedFields.includes(f))
+          .filter((f) => allowedFields.includes(f) && /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(f)) // Validate field names
       : allowedFields;
 
     if (fields.length) this.fieldsStr = fields.join(', ');

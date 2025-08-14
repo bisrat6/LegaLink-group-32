@@ -1,27 +1,20 @@
-const e = require('express');
 const query = require('../models/caseModel');
-
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 //this routes is hit by the lawyer so it gives all open cases with his specialization, Not all cases in the data base.
-exports.getAllCases = async (req, res) => {
-  try {
-    // const id = 3;
-    const result = await query.getAllCases(req.query);
-    res.status(200).json({
-      status: 'success',
-      data: {
-        result,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: error.message,
-    });
-  }
-};
+exports.getAllCases = catchAsync(async (req, res) => {
+  // const id = 3;
+  const result = await query.getAllCases(req.query);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      result,
+    },
+  });
+});
 
 //this route is hit by the client to post his case
-exports.postCase = async (req, res) => {
+exports.postCase = catchAsync(async (req, res) => {
   const id = 6;
   const result = await query.postCase(id, req.body);
   res.status(200).json({
@@ -31,10 +24,10 @@ exports.postCase = async (req, res) => {
     },
     message: 'successfully created',
   });
-};
+});
 
 // this also hit by the client to update his case.
-exports.updateCase = async (req, res) => {
+exports.updateCase = catchAsync(async (req, res) => {
   // case id need not to be secured and sendt through url params
   const id = Number(req.params.id);
 
@@ -63,30 +56,55 @@ exports.updateCase = async (req, res) => {
 
   const result = await query.updateCase(updates, values, id);
 
+  if (!result) {
+    throw new AppError('No case found with that ID', 404);
+  }
+
   res.status(201).json({
     status: 'success',
     data: { result },
   });
-};
+});
 
 // this route is used by the lawyer to get specific case on the list
-exports.getCase = async (req, res) => {
+exports.getCase = catchAsync(async (req, res) => {
   const id = req.params.id * 1;
   const result = await query.getCase(id);
+  if (!result) {
+    throw new AppError('No case found with that ID', 404);
+  }
   res.status(200).json({
     status: 'success',
     data: {
       result,
     },
   });
-};
+});
 
 // this route is used by the client to delete.
-exports.deleteCase = async (req, res) => {
+exports.deleteCase = catchAsync(async (req, res) => {
   const id = req.params.id * 1;
-  await query.deleteCase(id);
+  const result = await query.deleteCase(id);
+  if (!result) {
+    throw new AppError('No case found with that ID', 404);
+  }
   res.status(202).json({
     status: 'success',
     message: 'successfully deleted',
   });
-};
+});
+
+exports.postReview = catchAsync(async (req, res) => {
+  const caseId = req.params.caseId * 1;
+  const reviewerId = 4; // Assuming req.user.id is the client ID
+  const result = await query.postReview(caseId, {
+    ...req.body,
+    reviewerId: reviewerId,
+  });
+  res.status(201).json({
+    status: 'success',
+    data: {
+      result,
+    },
+  });
+});

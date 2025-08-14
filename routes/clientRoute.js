@@ -3,7 +3,8 @@ const clientController = require('../controllers/clientController');
 
 const router = express.Router();
 
-router.route('/:id').get(clientController.getClient);
+// Specific routes must come before parameterized routes
 router.route('/').patch(clientController.updateClient);
+router.route('/:id').get(clientController.getClient);
 
 module.exports = router;

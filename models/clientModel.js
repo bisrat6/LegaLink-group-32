@@ -1,42 +1,37 @@
 const db = require('./db');
+const catchAsync = require('../utils/catchAsync');
 
-exports.getClient = async (id) => {
-  try {
-    const result = await db.query(
-      `
-          SELECT * FROM users WHERE user_id=$1 AND role='client'
+exports.getClient =async (id) => {
+  const result = await db.query(
+    `
+        SELECT * FROM users WHERE user_id=$1 AND role='client'
           `,
-      [id],
-    );
-    const result2 = await db.query(
-      `
+    [id],
+  );
+  const result2 = await db.query(
+    `
       SELECT * FROM cases WHERE client_id=$1`,
-      [id],
-    );
-    return [result.rows[0], result2.rows];
-  } catch (error) {
-    console.error('Error in getClient:', error);
-    throw error;
-  }
+    [id],
+  );
+  return [result.rows[0], result2.rows];
 };
 
 exports.updateClient = async (updates, values, id) => {
-  try {
-    const result = await db.query(
-      `
+  // Build safe parameterized query
+  const setClause = updates
+    .map((field, index) => `${field} = $${index + 1}`)
+    .join(', ');
+  const result = await db.query(
+    `
     UPDATE users
-    SET ${updates.join(', ')}
-    WHERE user_id = ${id}
+    SET ${setClause}
+    WHERE user_id = $${updates.length + 1}
     RETURNING *
   `,
-      values,
-    );
+    [...values, id],
+  );
 
-    return result.rows;
-  } catch (error) {
-    console.error('Error in updateClient:', error);
-    throw error;
-  }
+  return result.rows;
 };
 
 // exports.createClient = async (profile)=>{

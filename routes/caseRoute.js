@@ -1,5 +1,5 @@
 const express = require('express');
-
+const caseValidation = require('../middleware/caseValidation');
 const caseController = require('../controllers/caseController');
 
 const router = express.Router();
@@ -8,12 +8,17 @@ const router = express.Router();
 
 // router.param('id', caseController.checkId);
 
-router.route('/').get(caseController.getAllCases).post(caseController.postCase);
+router
+  .route('/')
+  .get(caseValidation.validateCaseQuery, caseController.getAllCases)
+  .post(caseValidation.validatePostCase, caseController.postCase);
 
 router
   .route('/:id')
   .get(caseController.getCase)
-  .patch(caseController.updateCase)
+  .patch(caseValidation.validateUpdateCase, caseController.updateCase)
   .delete(caseController.deleteCase);
+
+router.route('/:caseId/reviews').post(caseController.postReview);
 
 module.exports = router;

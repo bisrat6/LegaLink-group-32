@@ -1,7 +1,8 @@
 const query = require('../models/lawyerModel');
-
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 //client can get all lawyers
-exports.getAllLawyers = async (req, res) => {
+exports.getAllLawyers = catchAsync(async (req, res) => {
   const result = await query.getAllLawyers(req.query);
   res.status(200).json({
     status: 'success',
@@ -9,35 +10,37 @@ exports.getAllLawyers = async (req, res) => {
       result,
     },
   });
-};
+});
 
 //lawyer profile creation
-exports.createLawyerProfile = async (req, res) => {
+exports.createLawyerProfile = catchAsync(async (req, res) => {
   const id = 6;
   await query.createProfile(req.body, id);
   res.status(201).json({
     status: 'success',
     message: 'Successfully created',
   });
-};
+});
 
 //client get lawyers by their id
-exports.getLawyer = async (req, res) => {
+exports.getLawyer = catchAsync(async (req, res) => {
   const id = req.params.id * 1;
   const result = await query.getLawyer(id);
+  if (!result) {
+    throw new AppError('No lawyer found with that ID', 404);
+  }
   res.status(200).json({
     status: 'success',
     data: {
       result,
     },
   });
-};
+});
 
 //lawyer can update their profile
-exports.updateLawyerProfile = async (req, res) => {
-  const id = 6; // Hardcoded? Consider getting from req.params or auth
+exports.updateLawyerProfile = catchAsync(async (req, res) => {
+  const id = 6; // Or get from req.params/auth
 
-  // Mapping of body keys to DB column names
   const lawyerProfileFields = {
     licenseNumber: 'license_number',
     barAssociation: 'bar_association',
@@ -61,37 +64,52 @@ exports.updateLawyerProfile = async (req, res) => {
     address: 'address',
   };
 
-  const updates = [];
-  const values = [];
-
+  const profileUpdates = [];
+  const profileValues = [];
   let index = 1;
-
-  // Build updates for lawyer_profiles
   for (const [key, column] of Object.entries(lawyerProfileFields)) {
     if (req.body[key] !== undefined) {
-      updates.push(`${column}=$${index++}`);
-      values.push(req.body[key]);
+      profileUpdates.push(`${column}=$${index++}`);
+      profileValues.push(req.body[key]);
     }
   }
+
+  const userUpdates = [];
+  const userValues = [];
   index = 1;
-  // Build updates for users
   for (const [key, column] of Object.entries(userFields)) {
     if (req.body[key] !== undefined) {
-      updates.push(`${column}=$${index++}`);
-      values.push(req.body[key]);
+      userUpdates.push(`${column}=$${index++}`);
+      userValues.push(req.body[key]);
     }
   }
 
-  const result = await query.updateProfile(updates, values, id);
-
+  const result = await query.updateProfile(
+    profileUpdates,
+    profileValues,
+    userUpdates,
+    userValues,
+    id,
+  );
+  if (!result) {
+    throw new AppError('No lawyer found with that ID', 404);
+  }
   res.status(201).json({
     status: 'success',
     data: result,
   });
-};
+});
 
-//client can filter lawyers
-exports.filterLawyer = async (req, res) => {
+// it is only for the admin
+exports.verifyLawyer = catchAsync(async (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined',
+  });
+});
+
+// Search and filter lawyers
+exports.filterLawyer = catchAsync(async (req, res) => {
   const result = await query.searchLawyer(req.query);
   res.status(200).json({
     status: 'success',
@@ -99,12 +117,30 @@ exports.filterLawyer = async (req, res) => {
       result,
     },
   });
-};
+});
 
-// it is only for the admin
-exports.verfiyLawyer = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+// Get reviews for a specific lawyer
+exports.getLawyerReviews = catchAsync(async (req, res) => {
+  const lawyerId = req.params.lawyerId * 1;
+  const result = await query.getLawyerReviews(lawyerId);
+  if (!result) {
+    throw new AppError('No reviews found for that lawyer ID', 404);
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      result,
+    },
   });
-};
+});
+
+exports.getMyReviews = catchAsync(async (req, res) => {
+  const lawyerId = 7; // Assuming req.user.id is the lawyer ID
+  const result = await query.getMyReviews(lawyerId);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      result,
+    },
+  });
+});
