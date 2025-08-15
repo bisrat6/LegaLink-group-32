@@ -10,15 +10,14 @@ exports.getClient = catchAsync(async (req, res) => {
   }
   res.status(200).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });
 
 // used by clients
 exports.updateClient = catchAsync(async (req, res) => {
-  const id = 6;
+  const id = 25; // Assuming req.user.id is the user ID
+  // Define the mapping of request body fields to database columns
   const userFields = {
     country: 'country',
     firstName: 'first_name',
@@ -53,13 +52,3 @@ exports.updateClient = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
-// exports.createClientProfile = async (req, res) => {
-//   const result = await query.createClient(req.body);
-//   res.status(201).json({
-//     status: 'success',
-//     data: {
-//       result,
-//     },
-//   });
-// };

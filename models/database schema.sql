@@ -162,7 +162,7 @@ CREATE TABLE public.cases (
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT cases_priority_check CHECK (((priority)::text = ANY ((ARRAY['low'::character varying, 'medium'::character varying, 'high'::character varying, 'urgent'::character varying])::text[]))),
     CONSTRAINT cases_status_check CHECK (((status)::text = ANY ((ARRAY['open'::character varying, 'in_progress'::character varying, 'pending_review'::character varying, 'closed'::character varying, 'cancelled'::character varying])::text[]))),
-    CONSTRAINT open_cases_no_lawyer CHECK ((NOT (((status)::text = 'Open'::text) AND (lawyer_id IS NOT NULL))))
+    CONSTRAINT open_cases_no_lawyer CHECK ((NOT (((status)::text = 'open'::text) AND (lawyer_id IS NOT NULL))))
 );
 
 

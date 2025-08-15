@@ -5,6 +5,23 @@ const handleCastErrDB = () => {
   return new AppError(message, 400);
 };
 
+const handleDuplicateFieldsDB = (err) => {
+  // err.detail example: 'Key (email)=(test@example.com) already exists.'
+  let field = 'field';
+  let value = '';
+
+  if (err.detail) {
+    const match = err.detail.match(/\((.*?)\)=\((.*?)\)/);
+    if (match) {
+      field = match[1];
+      value = match[2];
+    }
+  }
+
+  const message = `Duplicate value "${value}" for field "${field}". Please use another value!`;
+  return new AppError(message, 400);
+};
+
 const sendErrDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -38,8 +55,16 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = { ...err };
+    let error = {
+      ...err,
+      message: err.message,
+      isOperational: err.isOperational,
+      statusCode: err.statusCode,
+      status: err.status,
+    };
+
     if (error.code === '22P02') error = handleCastErrDB();
+    if (error.code === '23505') error = handleDuplicateFieldsDB(error);
     sendErrProd(error, res);
   }
 

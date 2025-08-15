@@ -27,37 +27,59 @@ exports.getAllLawyers = async (queryString) => {
 
 exports.getLawyer = async (id) => {
   const result = await db.query(
-    'SELECT * FROM users u  JOIN lawyer_profiles lp ON u.user_id=lp.user_id WHERE u.user_id=$1 AND u.role=$2',
-    [id, 'lawyer'],
+    `SELECT * FROM users WHERE user_id = $1 AND role = 'lawyer'`,
+    [id],
   );
-  return result.rows;
+  return result.rows[0];
 };
-
 exports.createProfile = async (profile, id) => {
   const {
     licenseNumber,
     barAssociation,
-    yearOfExperience,
     consultationFee,
     bio,
     education,
     languageSpoken,
+    specializations,
   } = profile;
-  await db.query(
+
+  // 1️⃣ Create lawyer profile first
+  const result = await db.query(
     `INSERT INTO lawyer_profiles 
-      (user_id,license_number,bar_association,years_of_experience,consultation_fee,bio,education,languages_spoken) 
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+      (user_id, license_number, bar_association, consultation_fee, bio, education, languages_spoken) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING profile_id`,
     [
       id,
       licenseNumber,
       barAssociation,
-      yearOfExperience,
       consultationFee,
       bio,
       education,
       languageSpoken,
     ],
   );
+
+  const profileId = result.rows[0].profile_id;
+
+  // 2️⃣ Build bulk insert values for specializations
+  const values = specializations
+    .map((_, i) => `($1, $${i * 2 + 2}, $${i * 2 + 3})`)
+    .join(', ');
+
+  const flatParams = specializations.flatMap((spec) => [
+    Number(spec.id),
+    Number(spec.yearsOfExperience),
+  ]);
+
+  // 3️⃣ Insert all specializations with years of experience
+  await db.query(
+    `INSERT INTO lawyer_specializations 
+       (profile_id, specialization_id, years_experience_in_specialization) 
+     VALUES ${values}`,
+    [profileId, ...flatParams],
+  );
+
+  return profileId;
 };
 
 exports.updateProfile = async (
@@ -71,31 +93,27 @@ exports.updateProfile = async (
   let userResult = {};
 
   if (profileUpdates.length) {
-    // Build safe parameterized query
-    const profileSetClause = profileUpdates
-      .map((field, index) => `${field} = $${index + 2}`)
-      .join(', ');
+    // 'profileUpdates' already contains properly parameterized fragments like "column=$1"
+    const profileSetClause = profileUpdates.join(', ');
     const res1 = await db.query(
       `UPDATE lawyer_profiles
          SET ${profileSetClause}
-         WHERE user_id=$1
+         WHERE user_id=$${profileValues.length + 1}
          RETURNING *`,
-      [id, ...profileValues],
+      [...profileValues, id],
     );
     profileResult = res1.rows[0];
   }
 
   if (userUpdates.length) {
-    // Build safe parameterized query
-    const userSetClause = userUpdates
-      .map((field, index) => `${field} = $${index + 2}`)
-      .join(', ');
+    // 'userUpdates' already contains properly parameterized fragments like "column=$1"
+    const userSetClause = userUpdates.join(', ');
     const res2 = await db.query(
       `UPDATE users
          SET ${userSetClause}
-         WHERE user_id=$1
+         WHERE user_id=$${userValues.length + 1}
          RETURNING *`,
-      [id, ...userValues],
+      [...userValues, id],
     );
     userResult = res2.rows[0];
   }
@@ -121,7 +139,7 @@ exports.searchLawyer = async (query) => {
         u.first_name AS first_name,
         u.last_name AS last_name,
         u.country AS location,
-        s.name AS specialization,
+        STRING_AGG(s.name, ', ') AS specializations,
         lp.average_rating AS rating
        FROM users u
        JOIN lawyer_profiles lp ON u.user_id = lp.user_id
@@ -131,7 +149,7 @@ exports.searchLawyer = async (query) => {
          AND ($2::text IS NULL OR s.name = $2)
          AND ($3::float IS NULL OR lp.average_rating >= $3)
          AND ($4::text IS NULL OR LOWER(u.first_name) LIKE LOWER('%' || $4 || '%'))
-       GROUP BY u.user_id, u.first_name, u.last_name, u.country, s.name, lp.average_rating
+       GROUP BY u.user_id, u.first_name, u.last_name, u.country, lp.average_rating
        LIMIT $5 OFFSET $6`,
     [
       location || null,

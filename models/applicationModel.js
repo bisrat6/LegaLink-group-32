@@ -1,23 +1,6 @@
 const db = require('./db');
 const APIFeatures = require('../utils/apiFeatures');
-const catchAsync = require('../utils/catchAsync');
-
-exports.applyApplication = async (
-  caseId, lawyerId, applicationData) => {
-      const { message } = applicationData;
-
-    const result = await db.query(
-      `
-          INSERT INTO case_applications (case_id, lawyer_id, message)
-          VALUES ($1, $2, $3)
-          RETURNING *;
-          `,
-      [caseId, lawyerId, message],
-    );
-
-    return result.rows[0];
-  }
-
+const AppError = require('../utils/appError');
 exports.getAllApplications = async (caseId, queryString) => {
   // Initialize APIFeatures with query parameters
   const apiFeatures = new APIFeatures(queryString).paginate();
@@ -34,7 +17,30 @@ exports.getAllApplications = async (caseId, queryString) => {
   // Build final query with values
   const { query, values } = apiFeatures.build(baseQuery);
   const result = await db.query(query, values);
+  if (!result.rows.length) {
+    throw new AppError('No applications found for this case', 404);
+  }
   return result.rows;
+};
+
+exports.applyApplication = async (caseId, lawyerId, applicationData) => {
+  const { message } = applicationData;
+  const checkCase = await db.query(`SELECT * FROM cases WHERE case_id = $1`, [
+    caseId,
+  ]);
+  if (checkCase.rows[0].status !== 'open') {
+    throw new AppError('This case is not open for applications', 400);
+  }
+  const result = await db.query(
+    `
+          INSERT INTO case_applications (case_id, lawyer_id, message)
+          VALUES ($1, $2, $3)
+          RETURNING *;
+          `,
+    [caseId, lawyerId, message],
+  );
+
+  return result.rows[0];
 };
 
 exports.getApplicationsByLawyer = async (lawyerId, queryString) => {
@@ -49,7 +55,9 @@ exports.getApplicationsByLawyer = async (lawyerId, queryString) => {
 
   const { query, values } = apiFeatures.build(baseQuery);
   const result = await db.query(query, values);
-
+  if (result.rows.length === 0) {
+    throw new AppError('No applications found for this lawyer', 404);
+  }
   return result.rows;
 };
 

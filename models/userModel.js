@@ -1,7 +1,6 @@
 const db = require('./db');
-const catchAsync = require('../utils/catchAsync');
 
-exports.createUser = catchAsync(async (profile) => {
+exports.createUser = async (profile) => {
   const {
     email,
     password,
@@ -44,16 +43,17 @@ exports.createUser = catchAsync(async (profile) => {
   );
 
   return result.rows;
-});
+};
 
 // continue here
 
-exports.getProfile = catchAsync(async (id) => {
+exports.getProfile = async (id) => {
   const result = await db.query(`SELECT * FROM users WHERE user_id=$1`, [id]);
-
   const basicProfile = result.rows[0];
+  if (!basicProfile) {
+    return { basic: {}, details: [] };
+  }
   let detailsRes;
-
   if (basicProfile.role === 'lawyer') {
     detailsRes = await db.query(
       `
@@ -108,7 +108,7 @@ exports.getProfile = catchAsync(async (id) => {
   }
 
   return {
-    basic: basicProfile,
-    details: detailsRes.rows,
+    basic: basicProfile || {},
+    details: detailsRes.rows || [],
   };
-});
+};

@@ -3,33 +3,41 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 //this routes is hit by the lawyer so it gives all open cases with his specialization, Not all cases in the data base.
 exports.getAllCases = catchAsync(async (req, res) => {
-  // const id = 3;
   const result = await query.getAllCases(req.query);
   res.status(200).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });
 
 //this route is hit by the client to post his case
 exports.postCase = catchAsync(async (req, res) => {
-  const id = 6;
+  const id = 21; // client ID later replace by req.user.id
   const result = await query.postCase(id, req.body);
   res.status(200).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
     message: 'successfully created',
+  });
+});
+
+// this route is used by the lawyer to get specific case on the list
+exports.getCase = catchAsync(async (req, res) => {
+  const id = req.params.caseId * 1;
+  const result = await query.getCase(id);
+  if (!result) {
+    throw new AppError('No case found with that ID', 404);
+  }
+  res.status(200).json({
+    status: 'success',
+    data: result,
   });
 });
 
 // this also hit by the client to update his case.
 exports.updateCase = catchAsync(async (req, res) => {
   // case id need not to be secured and sendt through url params
-  const id = Number(req.params.id);
+  const id = Number(req.params.caseId);
 
   // Mapping of body keys to DB columns
   const fieldMap = {
@@ -40,6 +48,8 @@ exports.updateCase = catchAsync(async (req, res) => {
     estimatedDuration: 'estimated_duration',
     budgetRange: 'budget_range',
     deadlineDate: 'deadline_date',
+    status: 'status',
+    notes: 'notes',
   };
 
   const updates = [];
@@ -62,28 +72,15 @@ exports.updateCase = catchAsync(async (req, res) => {
 
   res.status(201).json({
     status: 'success',
-    data: { result },
-  });
-});
-
-// this route is used by the lawyer to get specific case on the list
-exports.getCase = catchAsync(async (req, res) => {
-  const id = req.params.id * 1;
-  const result = await query.getCase(id);
-  if (!result) {
-    throw new AppError('No case found with that ID', 404);
-  }
-  res.status(200).json({
-    status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });
 
 // this route is used by the client to delete.
 exports.deleteCase = catchAsync(async (req, res) => {
-  const id = req.params.id * 1;
+  const id = req.params.caseId * 1;
+  // Ensure deletable state using model-level guard
+  await query.canDeleteCase(id);
   const result = await query.deleteCase(id);
   if (!result) {
     throw new AppError('No case found with that ID', 404);
@@ -96,10 +93,10 @@ exports.deleteCase = catchAsync(async (req, res) => {
 
 exports.postReview = catchAsync(async (req, res) => {
   const caseId = req.params.caseId * 1;
-  const reviewerId = 4; // Assuming req.user.id is the client ID
+  const reviewerId = 22; // Assuming req.user.id is the client ID
   const result = await query.postReview(caseId, {
     ...req.body,
-    reviewerId: reviewerId,
+    reviewerId,
   });
   res.status(201).json({
     status: 'success',

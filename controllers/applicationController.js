@@ -41,22 +41,18 @@ exports.getAllApplication = catchAsync(async (req, res) => {
   const applications = await query.getAllApplications(caseId, req.query);
   res.status(200).json({
     status: 'success',
-    data: {
-      applications,
-    },
+    data: applications,
   });
 });
 
 //lawyers apply for cases
 exports.ApplyApplication = catchAsync(async (req, res) => {
-  const lawyerId = 7; //later change to req.user.id
+  const lawyerId = 21; //later change to req.user.id
   const caseId = req.params.caseId * 1;
   const application = await query.applyApplication(caseId, lawyerId, req.body);
   res.status(201).json({
     status: 'success',
-    data: {
-      application,
-    },
+    data: application,
   });
 });
 
@@ -66,9 +62,7 @@ exports.getApplicationBylawer = catchAsync(async (req, res) => {
   const applications = await query.getApplicationsByLawyer(lawyerId, req.query);
   res.status(200).json({
     status: 'success',
-    data: {
-      applications,
-    },
+    data: applications,
   });
 });
 

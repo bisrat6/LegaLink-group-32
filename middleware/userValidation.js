@@ -24,9 +24,27 @@ exports.validateUserRequired = (req, res, next) => {
   if (error) {
     return res.status(400).json({
       status: 'fail',
-      errors: error.details.map((err) => err.message),
+      message: error.details.map((err) => err.message).join('; '),
     });
   }
 
   next();
 };
+
+// Generic path param validator for numeric IDs
+exports.validateIdParam =
+  (paramName = 'id') =>
+  (req, res, next) => {
+    const raw = req.params[paramName];
+    const value = Number(raw);
+
+    if (!Number.isInteger(value) || value <= 0) {
+      return res.status(400).json({
+        status: 'fail',
+        message: `Invalid ${paramName} provided`,
+      });
+    }
+
+    req.params[paramName] = value;
+    next();
+  };

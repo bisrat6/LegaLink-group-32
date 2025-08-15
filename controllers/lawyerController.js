@@ -1,20 +1,23 @@
 const query = require('../models/lawyerModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const userValidation = require('../middleware/userValidation');
 //client can get all lawyers
 exports.getAllLawyers = catchAsync(async (req, res) => {
   const result = await query.getAllLawyers(req.query);
   res.status(200).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });
 
 //lawyer profile creation
 exports.createLawyerProfile = catchAsync(async (req, res) => {
-  const id = 6;
+  const id = 44;
+  const result = await query.getLawyer(id);
+  if (!result) {
+    throw new AppError('No user found with that ID', 404);
+  }
   await query.createProfile(req.body, id);
   res.status(201).json({
     status: 'success',
@@ -39,10 +42,9 @@ exports.getLawyer = catchAsync(async (req, res) => {
 
 //lawyer can update their profile
 exports.updateLawyerProfile = catchAsync(async (req, res) => {
-  const id = 6; // Or get from req.params/auth
+  const id = 44; // Assuming req.user.id is the lawyer ID
 
   const lawyerProfileFields = {
-    licenseNumber: 'license_number',
     barAssociation: 'bar_association',
     yearOfExperience: 'years_of_experience',
     consultationFee: 'consultation_fee',
@@ -113,9 +115,7 @@ exports.filterLawyer = catchAsync(async (req, res) => {
   const result = await query.searchLawyer(req.query);
   res.status(200).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });
 
@@ -123,7 +123,7 @@ exports.filterLawyer = catchAsync(async (req, res) => {
 exports.getLawyerReviews = catchAsync(async (req, res) => {
   const lawyerId = req.params.lawyerId * 1;
   const result = await query.getLawyerReviews(lawyerId);
-  if (!result) {
+  if (!result.length) {
     throw new AppError('No reviews found for that lawyer ID', 404);
   }
   res.status(200).json({
@@ -135,7 +135,11 @@ exports.getLawyerReviews = catchAsync(async (req, res) => {
 });
 
 exports.getMyReviews = catchAsync(async (req, res) => {
-  const lawyerId = 7; // Assuming req.user.id is the lawyer ID
+  const lawyerId = 31; // Assuming req.user.id is the lawyer ID
+  const resultTemp = await query.getLawyer(lawyerId);
+  if (!resultTemp) {
+    throw new AppError('No lawyer found with that ID', 404);
+  }
   const result = await query.getMyReviews(lawyerId);
   res.status(200).json({
     status: 'success',

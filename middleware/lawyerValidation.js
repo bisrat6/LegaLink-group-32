@@ -8,6 +8,14 @@ const postlawyerSchema = Joi.object({
   bio: Joi.string().min(10).max(500).required(),
   education: Joi.string().min(2).max(100).required(),
   languageSpoken: Joi.string().min(2).max(100).required(),
+  specializations: Joi.array()
+    .items(
+      Joi.object({
+        id: Joi.number().integer().min(1).required(),
+        yearsOfExperience: Joi.number().integer().min(0).required(),
+      }),
+    )
+    .required(),
 });
 
 exports.validateLawyerProfile = (req, res, next) => {
@@ -16,7 +24,7 @@ exports.validateLawyerProfile = (req, res, next) => {
   if (error) {
     return res.status(400).json({
       status: 'fail',
-      errors: error.details.map((detail) => detail.message),
+      message: error.details.map((detail) => detail.message).join('; '),
     });
   }
 
@@ -51,7 +59,7 @@ exports.validateUserUpdate = (req, res, next) => {
   if (error) {
     return res.status(400).json({
       status: 'fail',
-      errors: error.details.map((err) => err.message),
+      message: error.details.map((err) => err.message).join('; '),
     });
   }
 
@@ -73,7 +81,7 @@ exports.validateLawyerSearch = (req, res, next) => {
   if (error) {
     return res.status(400).json({
       status: 'fail',
-      errors: error.details.map((err) => err.message),
+      message: error.details.map((err) => err.message).join('; '),
     });
   }
 
