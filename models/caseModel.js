@@ -154,16 +154,29 @@ exports.deleteCase = async (caseId) => {
     client.release();
   }
 };
-exports.postReview = async (caseId, review) => {
-  const { rating, comment, reviewerId } = review;
+exports.postReview = async (caseId, review, reviewerId) => {
+  const { rating, comment} = review;
 
-  // Check if user already reviewed this case
+
+// Check authorization to review a case
+const reviewOwner = await db.query(
+  `SELECT case_id FROM cases WHERE client_id = $1`,
+  [reviewerId]
+);
+
+// Extract case_ids into an array
+const caseIds = reviewOwner.rows.map(row => row.case_id);
+
+if (!caseIds.includes(caseId)) {
+  throw new AppError('You are not authorized to review this case', 403);
+}
+
+    // Check if user already reviewed this case
   const existingReview = await db.query(
     'SELECT review_id FROM reviews WHERE case_id = $1 AND reviewer_id = $2',
     [caseId, reviewerId]
   );
-
-  if (existingReview.rows.length > 0) {
+    if (existingReview.rows.length > 0) {
     throw new AppError('You have already reviewed this case', 400);
   }
 

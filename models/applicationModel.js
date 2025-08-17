@@ -1,8 +1,17 @@
 const db = require('./db');
 const APIFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
-exports.getAllApplications = async (caseId, queryString) => {
+
+exports.getAllApplications = async (caseId, queryString, clientId) => {
   // Initialize APIFeatures with query parameters
+  const isOwner = await db.query(
+    `SELECT case_id FROM cases WHERE client_id=$1`,
+    [clientId],
+  );
+  const caseIds = isOwner.rows.map((row) => row.case_id);
+  if (!caseIds.includes(caseId)) {
+    throw new AppError('you are not authorized to see applications');
+  }
   const apiFeatures = new APIFeatures(queryString).paginate();
 
   // Base query: use parameterized caseId
@@ -28,9 +37,13 @@ exports.applyApplication = async (caseId, lawyerId, applicationData) => {
   const checkCase = await db.query(`SELECT * FROM cases WHERE case_id = $1`, [
     caseId,
   ]);
+  if (!checkCase.rows[0]) {
+    throw new AppError('No case found with this ID', 404);
+  }
   if (checkCase.rows[0].status !== 'open') {
     throw new AppError('This case is not open for applications', 400);
   }
+
   const result = await db.query(
     `
           INSERT INTO case_applications (case_id, lawyer_id, message)
@@ -44,17 +57,15 @@ exports.applyApplication = async (caseId, lawyerId, applicationData) => {
 };
 
 exports.getApplicationsByLawyer = async (lawyerId, queryString) => {
-  // Merge lawyerId into queryString for APIFeatures
-  const filters = { ...queryString, lawyer_id: lawyerId };
-
-  const apiFeatures = new APIFeatures(filters)
-    .filter(['lawyer_id', 'status']) // include lawyer_id as filter
+  const apiFeatures = new APIFeatures(queryString);
+  apiFeatures.paramIndex = 1;
+  apiFeatures
+    .filter(['status']) // include lawyer_id as filter
     .paginate();
-
-  const baseQuery = `SELECT * FROM case_applications`;
+  const baseQuery = `SELECT * FROM case_applications WHERE lawyer_id = $1`;
 
   const { query, values } = apiFeatures.build(baseQuery);
-  const result = await db.query(query, values);
+  const result = await db.query(query, [lawyerId, ...values]);
   if (result.rows.length === 0) {
     throw new AppError('No applications found for this lawyer', 404);
   }

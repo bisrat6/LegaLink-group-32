@@ -12,7 +12,6 @@ exports.getClient = async (id) => {
       SELECT * FROM cases WHERE client_id=$1`,
     [id],
   );
-  console.log(result.rows, result2.rows);
   return { user: result.rows[0], case: result2.rows };
 };
 

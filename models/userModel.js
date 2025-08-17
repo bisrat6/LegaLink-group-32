@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const db = require('./db');
 
 exports.createUser = async (profile) => {
@@ -42,10 +43,8 @@ exports.createUser = async (profile) => {
     values,
   );
 
-  return result.rows;
+  return result.rows[0];
 };
-
-// continue here
 
 exports.getProfile = async (id) => {
   const result = await db.query(`SELECT * FROM users WHERE user_id=$1`, [id]);
@@ -111,4 +110,47 @@ exports.getProfile = async (id) => {
     basic: basicProfile || {},
     details: detailsRes.rows || [],
   };
+};
+
+exports.getUserByEmail = async (email) => {
+  const result = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+  return result.rows[0];
+};
+exports.getUserById = async (id) => {
+  const result = await db.query(`SELECT * FROM users WHERE user_id=$1`, [id]);
+  return result.rows[0];
+};
+
+exports.updatePassword = async (userId, newPassword) => {
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  await db.query(
+    `UPDATE users 
+     SET password_hash = $1, password_changed_at = NOW() 
+     WHERE user_id = $2`,
+    [hashedPassword, userId],
+  );
+};
+//token adding
+exports.updateUser = async (user) => {
+  const { passwordResetToken, passwordResetExpires } = user;
+  await db.query(
+    `UPDATE users 
+     SET password_reset_token = $1, password_reset_expires = $2
+     WHERE user_id = $3`,
+    [passwordResetToken, passwordResetExpires, user.user_id],
+  );
+};
+exports.getUserByToken = async (token) => {
+  const user = await db.query(
+    `
+    SELECT * FROM users WHERE password_reset_token=$1`,
+    [token],
+  );
+  return user.rows[0];
+};
+exports.deleteMe = async (userId) => {
+  await db.query(`UPDATE users SET is_active = false WHERE user_id = $1`, [
+    userId,
+  ]);
+  return 1;
 };

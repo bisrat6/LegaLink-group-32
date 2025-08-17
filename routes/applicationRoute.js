@@ -1,24 +1,43 @@
 const express = require('express');
-
+const authController = require('../controllers/authController');
 const applicationController = require('../controllers/applicationController');
 
 const router = express.Router();
 
 router
-  .route('/cases/:caseId/applications')
-  .get(applicationController.getAllApplication)
-  .post(applicationController.ApplyApplication);
-
+  .route('/lawyer/applications')
+  .get(
+    authController.protect,
+    authController.restrictTo('lawyer'),
+    applicationController.getApplicationBylawer,
+  );
 router
-  .route('/lawyers/:lawyerId/applications')
-  .get(applicationController.getApplicationBylawer);
+  .route('/cases/:caseId/applications')
+  .get(
+    authController.protect,
+    authController.restrictTo('client'),
+    applicationController.getAllApplication,
+  )
+  .post(
+    authController.protect,
+    authController.restrictTo('lawyer'),
+    applicationController.ApplyApplication,
+  );
 
 router
   .route('/applications/:applicationId')
-  .patch(applicationController.AcceptApplication);
+  .patch(
+    authController.protect,
+    authController.restrictTo('client', 'admin'),
+    applicationController.AcceptApplication,
+  );
 
 router
   .route('/applications/:applicationId/reject')
-  .patch(applicationController.rejectApplication);
+  .patch(
+    authController.protect,
+    authController.restrictTo('client', 'admin'),
+    applicationController.rejectApplication,
+  );
 
 module.exports = router;

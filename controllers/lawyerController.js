@@ -1,9 +1,8 @@
 const query = require('../models/lawyerModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const userValidation = require('../middleware/userValidation');
 //client can get all lawyers
-exports.getAllLawyers = catchAsync(async (req, res) => {
+exports.getAllLawyers = catchAsync(async (req, res, next) => {
   const result = await query.getAllLawyers(req.query);
   res.status(200).json({
     status: 'success',
@@ -12,11 +11,11 @@ exports.getAllLawyers = catchAsync(async (req, res) => {
 });
 
 //lawyer profile creation
-exports.createLawyerProfile = catchAsync(async (req, res) => {
-  const id = 44;
+exports.createLawyerProfile = catchAsync(async (req, res, next) => {
+  const id = req.user.user_id;
   const result = await query.getLawyer(id);
   if (!result) {
-    throw new AppError('No user found with that ID', 404);
+    return next(new AppError('No user found with that ID', 404));
   }
   await query.createProfile(req.body, id);
   res.status(201).json({
@@ -26,11 +25,11 @@ exports.createLawyerProfile = catchAsync(async (req, res) => {
 });
 
 //client get lawyers by their id
-exports.getLawyer = catchAsync(async (req, res) => {
+exports.getLawyer = catchAsync(async (req, res, next) => {
   const id = req.params.id * 1;
   const result = await query.getLawyer(id);
   if (!result) {
-    throw new AppError('No lawyer found with that ID', 404);
+    return next(new AppError('No user found with that ID', 404));
   }
   res.status(200).json({
     status: 'success',
@@ -41,9 +40,8 @@ exports.getLawyer = catchAsync(async (req, res) => {
 });
 
 //lawyer can update their profile
-exports.updateLawyerProfile = catchAsync(async (req, res) => {
-  const id = 44; // Assuming req.user.id is the lawyer ID
-
+exports.updateLawyerProfile = catchAsync(async (req, res, next) => {
+  const id = req.user.user_id; // Assuming req.user.id is the lawyer ID
   const lawyerProfileFields = {
     barAssociation: 'bar_association',
     yearOfExperience: 'years_of_experience',
@@ -94,7 +92,7 @@ exports.updateLawyerProfile = catchAsync(async (req, res) => {
     id,
   );
   if (!result) {
-    throw new AppError('No lawyer found with that ID', 404);
+    return next(new AppError('No lawyer found with that ID', 404));
   }
   res.status(201).json({
     status: 'success',
@@ -103,7 +101,7 @@ exports.updateLawyerProfile = catchAsync(async (req, res) => {
 });
 
 // it is only for the admin
-exports.verifyLawyer = catchAsync(async (req, res) => {
+exports.verifyLawyer = catchAsync(async (req, res, next) => {
   res.status(500).json({
     status: 'error',
     message: 'This route is not yet defined',
@@ -111,7 +109,7 @@ exports.verifyLawyer = catchAsync(async (req, res) => {
 });
 
 // Search and filter lawyers
-exports.filterLawyer = catchAsync(async (req, res) => {
+exports.filterLawyer = catchAsync(async (req, res, next) => {
   const result = await query.searchLawyer(req.query);
   res.status(200).json({
     status: 'success',
@@ -120,11 +118,11 @@ exports.filterLawyer = catchAsync(async (req, res) => {
 });
 
 // Get reviews for a specific lawyer
-exports.getLawyerReviews = catchAsync(async (req, res) => {
+exports.getLawyerReviews = catchAsync(async (req, res, next) => {
   const lawyerId = req.params.lawyerId * 1;
   const result = await query.getLawyerReviews(lawyerId);
   if (!result.length) {
-    throw new AppError('No reviews found for that lawyer ID', 404);
+    return next(new AppError('No reviews found for that lawyer ID', 404));
   }
   res.status(200).json({
     status: 'success',
@@ -134,17 +132,11 @@ exports.getLawyerReviews = catchAsync(async (req, res) => {
   });
 });
 
-exports.getMyReviews = catchAsync(async (req, res) => {
-  const lawyerId = 31; // Assuming req.user.id is the lawyer ID
-  const resultTemp = await query.getLawyer(lawyerId);
-  if (!resultTemp) {
-    throw new AppError('No lawyer found with that ID', 404);
-  }
+exports.getMyReviews = catchAsync(async (req, res, next) => {
+  const lawyerId = req.user.id;
   const result = await query.getMyReviews(lawyerId);
   res.status(200).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });

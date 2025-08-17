@@ -20,7 +20,6 @@ const postlawyerSchema = Joi.object({
 
 exports.validateLawyerProfile = (req, res, next) => {
   const { error } = postlawyerSchema.validate(req.body, { abortEarly: false });
-
   if (error) {
     return res.status(400).json({
       status: 'fail',
@@ -40,7 +39,6 @@ exports.validateUserUpdate = (req, res, next) => {
       .pattern(/^\+?[0-9]{7,15}$/)
       .message('Phone number must be valid'),
     email: Joi.string().email(),
-    password: Joi.string().min(8).max(128),
     dateOfBirth: Joi.date().less('now').iso(),
     city: Joi.string().trim().max(100),
     state: Joi.string().trim().max(100),

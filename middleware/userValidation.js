@@ -1,10 +1,11 @@
 const Joi = require('joi');
+const bcrypt = require('bcrypt');
 
 exports.validateUserRequired = (req, res, next) => {
   const schema = Joi.object({
     country: Joi.string().trim().min(2).max(100).required(),
     zipCode: Joi.string().trim().min(2).max(20).required(),
-    role: Joi.string().valid('client', 'lawyer', 'admin').required(),
+    role: Joi.string().valid('client', 'lawyer').required(),
     firstName: Joi.string().trim().min(2).max(50).required(),
     lastName: Joi.string().trim().min(2).max(50).required(),
     phone: Joi.string()
@@ -13,6 +14,10 @@ exports.validateUserRequired = (req, res, next) => {
       .required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).max(128).required(),
+    passwordConfirm: Joi.string()
+      .valid(Joi.ref('password'))
+      .required()
+      .messages({ 'any.only': 'Passwords do not match' }),
     dateOfBirth: Joi.date().less('now').iso().required(),
     city: Joi.string().trim().max(100).required(),
     state: Joi.string().trim().max(100).required(),
@@ -28,6 +33,24 @@ exports.validateUserRequired = (req, res, next) => {
     });
   }
 
+  next();
+};
+
+exports.validateUserPassword = (req, res, next) => {
+  const schema = Joi.object({
+    password: Joi.string().min(8).max(128).required(),
+    passwordConfirm: Joi.string()
+      .valid(Joi.ref('password'))
+      .required()
+      .messages({ 'any.only': 'Passwords do not match' }),
+  });
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error) {
+    return res.status(400).json({
+      status: 'fail',
+      message: error.details.map((err) => err.message).join('; '),
+    });
+  }
   next();
 };
 
@@ -48,3 +71,9 @@ exports.validateIdParam =
     req.params[paramName] = value;
     next();
   };
+
+exports.encryptPassword = async (req, res, next) => {
+  const { password } = req.body;
+  req.body.password = await bcrypt.hash(password, 10);
+  next();
+};

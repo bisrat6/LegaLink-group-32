@@ -38,7 +38,12 @@ const catchAsync = require('../utils/catchAsync');
 //get all applications from lawyers to a client applied for the case
 exports.getAllApplication = catchAsync(async (req, res) => {
   const caseId = req.params.caseId * 1;
-  const applications = await query.getAllApplications(caseId, req.query);
+  const clientId = req.user.user_id;
+  const applications = await query.getAllApplications(
+    caseId,
+    req.query,
+    clientId,
+  );
   res.status(200).json({
     status: 'success',
     data: applications,
@@ -47,7 +52,7 @@ exports.getAllApplication = catchAsync(async (req, res) => {
 
 //lawyers apply for cases
 exports.ApplyApplication = catchAsync(async (req, res) => {
-  const lawyerId = 21; //later change to req.user.id
+  const lawyerId = req.user.user_id;
   const caseId = req.params.caseId * 1;
   const application = await query.applyApplication(caseId, lawyerId, req.body);
   res.status(201).json({
@@ -58,7 +63,7 @@ exports.ApplyApplication = catchAsync(async (req, res) => {
 
 //lawyers get all applications
 exports.getApplicationBylawer = catchAsync(async (req, res) => {
-  const lawyerId = req.params.lawyerId * 1;
+  const lawyerId = req.user.user_id;
   const applications = await query.getApplicationsByLawyer(lawyerId, req.query);
   res.status(200).json({
     status: 'success',

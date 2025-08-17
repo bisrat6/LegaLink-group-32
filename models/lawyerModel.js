@@ -17,7 +17,7 @@ exports.getAllLawyers = async (queryString) => {
     .paginate(); // just handles LIMIT and OFFSET
 
   // Base query: select all lawyers
-  const baseQuery = `SELECT * FROM users WHERE role = 'lawyer'`;
+  const baseQuery = `SELECT * FROM users WHERE role = 'lawyer' AND is_active=true`;
 
   const { query, values } = apiFeatures.build(baseQuery);
   const result = await db.query(query, values);
@@ -149,6 +149,7 @@ exports.searchLawyer = async (query) => {
          AND ($2::text IS NULL OR s.name = $2)
          AND ($3::float IS NULL OR lp.average_rating >= $3)
          AND ($4::text IS NULL OR LOWER(u.first_name) LIKE LOWER('%' || $4 || '%'))
+         AND u.is_active=true
        GROUP BY u.user_id, u.first_name, u.last_name, u.country, lp.average_rating
        LIMIT $5 OFFSET $6`,
     [

@@ -5,7 +5,7 @@
 -- Dumped from database version 15.4
 -- Dumped by pg_dump version 15.4
 
--- Started on 2025-08-11 21:38:21
+-- Started on 2025-08-17 15:41:20
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -85,7 +85,7 @@ CREATE SEQUENCE public.appointments_appointment_id_seq
 ALTER TABLE public.appointments_appointment_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3561 (class 0 OID 0)
+-- TOC entry 3566 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: appointments_appointment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -105,7 +105,8 @@ CREATE TABLE public.case_applications (
     status character varying(20) DEFAULT 'pending'::character varying NOT NULL,
     applied_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone,
-    message text
+    message text,
+    CONSTRAINT case_applications_status_check CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'accepted'::character varying, 'rejected'::character varying])::text[])))
 );
 
 
@@ -128,7 +129,7 @@ CREATE SEQUENCE public.case_applications_application_id_seq
 ALTER TABLE public.case_applications_application_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3562 (class 0 OID 0)
+-- TOC entry 3567 (class 0 OID 0)
 -- Dependencies: 236
 -- Name: case_applications_application_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -185,7 +186,7 @@ CREATE SEQUENCE public.cases_case_id_seq
 ALTER TABLE public.cases_case_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3563 (class 0 OID 0)
+-- TOC entry 3568 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: cases_case_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -238,7 +239,7 @@ CREATE SEQUENCE public.documents_document_id_seq
 ALTER TABLE public.documents_document_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3564 (class 0 OID 0)
+-- TOC entry 3569 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: documents_document_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -292,7 +293,7 @@ CREATE SEQUENCE public.lawyer_profiles_profile_id_seq
 ALTER TABLE public.lawyer_profiles_profile_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3565 (class 0 OID 0)
+-- TOC entry 3570 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: lawyer_profiles_profile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -334,7 +335,7 @@ CREATE SEQUENCE public.lawyer_specializations_lawyer_specialization_id_seq
 ALTER TABLE public.lawyer_specializations_lawyer_specialization_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3566 (class 0 OID 0)
+-- TOC entry 3571 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: lawyer_specializations_lawyer_specialization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -382,7 +383,7 @@ CREATE SEQUENCE public.messages_message_id_seq
 ALTER TABLE public.messages_message_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3567 (class 0 OID 0)
+-- TOC entry 3572 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: messages_message_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -429,7 +430,7 @@ CREATE SEQUENCE public.notifications_notification_id_seq
 ALTER TABLE public.notifications_notification_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3568 (class 0 OID 0)
+-- TOC entry 3573 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: notifications_notification_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -480,7 +481,7 @@ CREATE SEQUENCE public.payments_payment_id_seq
 ALTER TABLE public.payments_payment_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3569 (class 0 OID 0)
+-- TOC entry 3574 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: payments_payment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -528,7 +529,7 @@ CREATE SEQUENCE public.reviews_review_id_seq
 ALTER TABLE public.reviews_review_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3570 (class 0 OID 0)
+-- TOC entry 3575 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: reviews_review_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -570,7 +571,7 @@ CREATE SEQUENCE public.specializations_specialization_id_seq
 ALTER TABLE public.specializations_specialization_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3571 (class 0 OID 0)
+-- TOC entry 3576 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: specializations_specialization_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -602,6 +603,9 @@ CREATE TABLE public.users (
     profile_picture_url character varying(500),
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    password_changed_at timestamp without time zone,
+    password_reset_token text,
+    password_reset_expires timestamp without time zone,
     CONSTRAINT users_role_check CHECK (((role)::text = ANY ((ARRAY['client'::character varying, 'lawyer'::character varying, 'admin'::character varying])::text[])))
 );
 
@@ -625,7 +629,7 @@ CREATE SEQUENCE public.users_user_id_seq
 ALTER TABLE public.users_user_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3572 (class 0 OID 0)
+-- TOC entry 3577 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -730,7 +734,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 
 
 --
--- TOC entry 3337 (class 2606 OID 24849)
+-- TOC entry 3340 (class 2606 OID 24849)
 -- Name: appointments appointments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -739,7 +743,16 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 3382 (class 2606 OID 41107)
+-- TOC entry 3385 (class 2606 OID 57482)
+-- Name: case_applications case_applications_case_lawyer_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.case_applications
+    ADD CONSTRAINT case_applications_case_lawyer_unique UNIQUE (case_id, lawyer_id);
+
+
+--
+-- TOC entry 3387 (class 2606 OID 41107)
 -- Name: case_applications case_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -748,7 +761,7 @@ ALTER TABLE ONLY public.case_applications
 
 
 --
--- TOC entry 3329 (class 2606 OID 24817)
+-- TOC entry 3332 (class 2606 OID 24817)
 -- Name: cases cases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -757,7 +770,7 @@ ALTER TABLE ONLY public.cases
 
 
 --
--- TOC entry 3353 (class 2606 OID 24926)
+-- TOC entry 3356 (class 2606 OID 24926)
 -- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -766,7 +779,7 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- TOC entry 3314 (class 2606 OID 24753)
+-- TOC entry 3315 (class 2606 OID 24753)
 -- Name: lawyer_profiles lawyer_profiles_license_number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -775,7 +788,7 @@ ALTER TABLE ONLY public.lawyer_profiles
 
 
 --
--- TOC entry 3316 (class 2606 OID 24751)
+-- TOC entry 3317 (class 2606 OID 24751)
 -- Name: lawyer_profiles lawyer_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -784,7 +797,16 @@ ALTER TABLE ONLY public.lawyer_profiles
 
 
 --
--- TOC entry 3325 (class 2606 OID 24787)
+-- TOC entry 3319 (class 2606 OID 57488)
+-- Name: lawyer_profiles lawyer_profiles_user_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.lawyer_profiles
+    ADD CONSTRAINT lawyer_profiles_user_id_key UNIQUE (user_id);
+
+
+--
+-- TOC entry 3328 (class 2606 OID 24787)
 -- Name: lawyer_specializations lawyer_specializations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -793,7 +815,7 @@ ALTER TABLE ONLY public.lawyer_specializations
 
 
 --
--- TOC entry 3327 (class 2606 OID 24789)
+-- TOC entry 3330 (class 2606 OID 24789)
 -- Name: lawyer_specializations lawyer_specializations_profile_id_specialization_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -802,7 +824,7 @@ ALTER TABLE ONLY public.lawyer_specializations
 
 
 --
--- TOC entry 3351 (class 2606 OID 24884)
+-- TOC entry 3354 (class 2606 OID 24884)
 -- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -811,7 +833,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 3380 (class 2606 OID 25034)
+-- TOC entry 3383 (class 2606 OID 25034)
 -- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -820,7 +842,7 @@ ALTER TABLE ONLY public.notifications
 
 
 --
--- TOC entry 3374 (class 2606 OID 24999)
+-- TOC entry 3377 (class 2606 OID 24999)
 -- Name: payments payments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -829,7 +851,7 @@ ALTER TABLE ONLY public.payments
 
 
 --
--- TOC entry 3366 (class 2606 OID 24962)
+-- TOC entry 3369 (class 2606 OID 24962)
 -- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -838,7 +860,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 3318 (class 2606 OID 24777)
+-- TOC entry 3321 (class 2606 OID 24777)
 -- Name: specializations specializations_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -847,7 +869,7 @@ ALTER TABLE ONLY public.specializations
 
 
 --
--- TOC entry 3320 (class 2606 OID 24775)
+-- TOC entry 3323 (class 2606 OID 24775)
 -- Name: specializations specializations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -856,7 +878,7 @@ ALTER TABLE ONLY public.specializations
 
 
 --
--- TOC entry 3305 (class 2606 OID 24731)
+-- TOC entry 3306 (class 2606 OID 24731)
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -865,7 +887,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3307 (class 2606 OID 24729)
+-- TOC entry 3308 (class 2606 OID 24729)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -874,7 +896,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3338 (class 1259 OID 24871)
+-- TOC entry 3341 (class 1259 OID 24871)
 -- Name: idx_appointments_appointment_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -882,7 +904,7 @@ CREATE INDEX idx_appointments_appointment_type ON public.appointments USING btre
 
 
 --
--- TOC entry 3339 (class 1259 OID 24866)
+-- TOC entry 3342 (class 1259 OID 24866)
 -- Name: idx_appointments_case_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -890,7 +912,7 @@ CREATE INDEX idx_appointments_case_id ON public.appointments USING btree (case_i
 
 
 --
--- TOC entry 3340 (class 1259 OID 24867)
+-- TOC entry 3343 (class 1259 OID 24867)
 -- Name: idx_appointments_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -898,7 +920,7 @@ CREATE INDEX idx_appointments_client_id ON public.appointments USING btree (clie
 
 
 --
--- TOC entry 3341 (class 1259 OID 24868)
+-- TOC entry 3344 (class 1259 OID 24868)
 -- Name: idx_appointments_lawyer_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -906,7 +928,7 @@ CREATE INDEX idx_appointments_lawyer_id ON public.appointments USING btree (lawy
 
 
 --
--- TOC entry 3342 (class 1259 OID 24869)
+-- TOC entry 3345 (class 1259 OID 24869)
 -- Name: idx_appointments_start_time; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -914,7 +936,7 @@ CREATE INDEX idx_appointments_start_time ON public.appointments USING btree (sta
 
 
 --
--- TOC entry 3343 (class 1259 OID 24870)
+-- TOC entry 3346 (class 1259 OID 24870)
 -- Name: idx_appointments_status; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -922,7 +944,7 @@ CREATE INDEX idx_appointments_status ON public.appointments USING btree (status)
 
 
 --
--- TOC entry 3330 (class 1259 OID 24833)
+-- TOC entry 3333 (class 1259 OID 24833)
 -- Name: idx_cases_case_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -930,7 +952,7 @@ CREATE INDEX idx_cases_case_type ON public.cases USING btree (case_type);
 
 
 --
--- TOC entry 3331 (class 1259 OID 24829)
+-- TOC entry 3334 (class 1259 OID 24829)
 -- Name: idx_cases_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -938,7 +960,7 @@ CREATE INDEX idx_cases_client_id ON public.cases USING btree (client_id);
 
 
 --
--- TOC entry 3332 (class 1259 OID 24834)
+-- TOC entry 3335 (class 1259 OID 24834)
 -- Name: idx_cases_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -946,7 +968,7 @@ CREATE INDEX idx_cases_created_at ON public.cases USING btree (created_at);
 
 
 --
--- TOC entry 3333 (class 1259 OID 24830)
+-- TOC entry 3336 (class 1259 OID 24830)
 -- Name: idx_cases_lawyer_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -954,7 +976,7 @@ CREATE INDEX idx_cases_lawyer_id ON public.cases USING btree (lawyer_id);
 
 
 --
--- TOC entry 3334 (class 1259 OID 24832)
+-- TOC entry 3337 (class 1259 OID 24832)
 -- Name: idx_cases_priority; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -962,7 +984,7 @@ CREATE INDEX idx_cases_priority ON public.cases USING btree (priority);
 
 
 --
--- TOC entry 3335 (class 1259 OID 24831)
+-- TOC entry 3338 (class 1259 OID 24831)
 -- Name: idx_cases_status; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -970,7 +992,7 @@ CREATE INDEX idx_cases_status ON public.cases USING btree (status);
 
 
 --
--- TOC entry 3354 (class 1259 OID 24943)
+-- TOC entry 3357 (class 1259 OID 24943)
 -- Name: idx_documents_case_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -978,7 +1000,7 @@ CREATE INDEX idx_documents_case_id ON public.documents USING btree (case_id);
 
 
 --
--- TOC entry 3355 (class 1259 OID 24948)
+-- TOC entry 3358 (class 1259 OID 24948)
 -- Name: idx_documents_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -986,7 +1008,7 @@ CREATE INDEX idx_documents_created_at ON public.documents USING btree (created_a
 
 
 --
--- TOC entry 3356 (class 1259 OID 24945)
+-- TOC entry 3359 (class 1259 OID 24945)
 -- Name: idx_documents_document_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -994,7 +1016,7 @@ CREATE INDEX idx_documents_document_type ON public.documents USING btree (docume
 
 
 --
--- TOC entry 3357 (class 1259 OID 24947)
+-- TOC entry 3360 (class 1259 OID 24947)
 -- Name: idx_documents_is_archived; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1002,7 +1024,7 @@ CREATE INDEX idx_documents_is_archived ON public.documents USING btree (is_archi
 
 
 --
--- TOC entry 3358 (class 1259 OID 24946)
+-- TOC entry 3361 (class 1259 OID 24946)
 -- Name: idx_documents_is_public; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1010,7 +1032,7 @@ CREATE INDEX idx_documents_is_public ON public.documents USING btree (is_public)
 
 
 --
--- TOC entry 3359 (class 1259 OID 24944)
+-- TOC entry 3362 (class 1259 OID 24944)
 -- Name: idx_documents_uploaded_by; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1018,7 +1040,7 @@ CREATE INDEX idx_documents_uploaded_by ON public.documents USING btree (uploaded
 
 
 --
--- TOC entry 3308 (class 1259 OID 24763)
+-- TOC entry 3309 (class 1259 OID 24763)
 -- Name: idx_lawyer_profiles_average_rating; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1026,7 +1048,7 @@ CREATE INDEX idx_lawyer_profiles_average_rating ON public.lawyer_profiles USING 
 
 
 --
--- TOC entry 3309 (class 1259 OID 24762)
+-- TOC entry 3310 (class 1259 OID 24762)
 -- Name: idx_lawyer_profiles_hourly_rate; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1034,7 +1056,7 @@ CREATE INDEX idx_lawyer_profiles_hourly_rate ON public.lawyer_profiles USING btr
 
 
 --
--- TOC entry 3310 (class 1259 OID 24764)
+-- TOC entry 3311 (class 1259 OID 24764)
 -- Name: idx_lawyer_profiles_is_verified; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1042,7 +1064,7 @@ CREATE INDEX idx_lawyer_profiles_is_verified ON public.lawyer_profiles USING btr
 
 
 --
--- TOC entry 3311 (class 1259 OID 24760)
+-- TOC entry 3312 (class 1259 OID 24760)
 -- Name: idx_lawyer_profiles_license_number; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1050,7 +1072,7 @@ CREATE INDEX idx_lawyer_profiles_license_number ON public.lawyer_profiles USING 
 
 
 --
--- TOC entry 3312 (class 1259 OID 24761)
+-- TOC entry 3313 (class 1259 OID 24761)
 -- Name: idx_lawyer_profiles_years_experience; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1058,7 +1080,7 @@ CREATE INDEX idx_lawyer_profiles_years_experience ON public.lawyer_profiles USIN
 
 
 --
--- TOC entry 3321 (class 1259 OID 24802)
+-- TOC entry 3324 (class 1259 OID 24802)
 -- Name: idx_lawyer_specializations_is_primary; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1066,7 +1088,7 @@ CREATE INDEX idx_lawyer_specializations_is_primary ON public.lawyer_specializati
 
 
 --
--- TOC entry 3322 (class 1259 OID 24800)
+-- TOC entry 3325 (class 1259 OID 24800)
 -- Name: idx_lawyer_specializations_profile_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1074,7 +1096,7 @@ CREATE INDEX idx_lawyer_specializations_profile_id ON public.lawyer_specializati
 
 
 --
--- TOC entry 3323 (class 1259 OID 24801)
+-- TOC entry 3326 (class 1259 OID 24801)
 -- Name: idx_lawyer_specializations_specialization_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1082,7 +1104,7 @@ CREATE INDEX idx_lawyer_specializations_specialization_id ON public.lawyer_speci
 
 
 --
--- TOC entry 3344 (class 1259 OID 24905)
+-- TOC entry 3347 (class 1259 OID 24905)
 -- Name: idx_messages_case_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1090,7 +1112,7 @@ CREATE INDEX idx_messages_case_id ON public.messages USING btree (case_id);
 
 
 --
--- TOC entry 3345 (class 1259 OID 24909)
+-- TOC entry 3348 (class 1259 OID 24909)
 -- Name: idx_messages_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1098,7 +1120,7 @@ CREATE INDEX idx_messages_created_at ON public.messages USING btree (created_at)
 
 
 --
--- TOC entry 3346 (class 1259 OID 24908)
+-- TOC entry 3349 (class 1259 OID 24908)
 -- Name: idx_messages_is_read; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1106,7 +1128,7 @@ CREATE INDEX idx_messages_is_read ON public.messages USING btree (is_read);
 
 
 --
--- TOC entry 3347 (class 1259 OID 24910)
+-- TOC entry 3350 (class 1259 OID 24910)
 -- Name: idx_messages_parent_message_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1114,7 +1136,7 @@ CREATE INDEX idx_messages_parent_message_id ON public.messages USING btree (pare
 
 
 --
--- TOC entry 3348 (class 1259 OID 24907)
+-- TOC entry 3351 (class 1259 OID 24907)
 -- Name: idx_messages_receiver_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1122,7 +1144,7 @@ CREATE INDEX idx_messages_receiver_id ON public.messages USING btree (receiver_i
 
 
 --
--- TOC entry 3349 (class 1259 OID 24906)
+-- TOC entry 3352 (class 1259 OID 24906)
 -- Name: idx_messages_sender_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1130,7 +1152,7 @@ CREATE INDEX idx_messages_sender_id ON public.messages USING btree (sender_id);
 
 
 --
--- TOC entry 3375 (class 1259 OID 25043)
+-- TOC entry 3378 (class 1259 OID 25043)
 -- Name: idx_notifications_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1138,7 +1160,7 @@ CREATE INDEX idx_notifications_created_at ON public.notifications USING btree (c
 
 
 --
--- TOC entry 3376 (class 1259 OID 25041)
+-- TOC entry 3379 (class 1259 OID 25041)
 -- Name: idx_notifications_is_read; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1146,7 +1168,7 @@ CREATE INDEX idx_notifications_is_read ON public.notifications USING btree (is_r
 
 
 --
--- TOC entry 3377 (class 1259 OID 25042)
+-- TOC entry 3380 (class 1259 OID 25042)
 -- Name: idx_notifications_notification_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1154,7 +1176,7 @@ CREATE INDEX idx_notifications_notification_type ON public.notifications USING b
 
 
 --
--- TOC entry 3378 (class 1259 OID 25040)
+-- TOC entry 3381 (class 1259 OID 25040)
 -- Name: idx_notifications_user_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1162,7 +1184,7 @@ CREATE INDEX idx_notifications_user_id ON public.notifications USING btree (user
 
 
 --
--- TOC entry 3367 (class 1259 OID 25016)
+-- TOC entry 3370 (class 1259 OID 25016)
 -- Name: idx_payments_case_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1170,7 +1192,7 @@ CREATE INDEX idx_payments_case_id ON public.payments USING btree (case_id);
 
 
 --
--- TOC entry 3368 (class 1259 OID 25017)
+-- TOC entry 3371 (class 1259 OID 25017)
 -- Name: idx_payments_client_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1178,7 +1200,7 @@ CREATE INDEX idx_payments_client_id ON public.payments USING btree (client_id);
 
 
 --
--- TOC entry 3369 (class 1259 OID 25021)
+-- TOC entry 3372 (class 1259 OID 25021)
 -- Name: idx_payments_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1186,7 +1208,7 @@ CREATE INDEX idx_payments_created_at ON public.payments USING btree (created_at)
 
 
 --
--- TOC entry 3370 (class 1259 OID 25018)
+-- TOC entry 3373 (class 1259 OID 25018)
 -- Name: idx_payments_lawyer_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1194,7 +1216,7 @@ CREATE INDEX idx_payments_lawyer_id ON public.payments USING btree (lawyer_id);
 
 
 --
--- TOC entry 3371 (class 1259 OID 25020)
+-- TOC entry 3374 (class 1259 OID 25020)
 -- Name: idx_payments_payment_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1202,7 +1224,7 @@ CREATE INDEX idx_payments_payment_type ON public.payments USING btree (payment_t
 
 
 --
--- TOC entry 3372 (class 1259 OID 25019)
+-- TOC entry 3375 (class 1259 OID 25019)
 -- Name: idx_payments_status; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1210,7 +1232,7 @@ CREATE INDEX idx_payments_status ON public.payments USING btree (status);
 
 
 --
--- TOC entry 3360 (class 1259 OID 24979)
+-- TOC entry 3363 (class 1259 OID 24979)
 -- Name: idx_reviews_case_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1218,7 +1240,7 @@ CREATE INDEX idx_reviews_case_id ON public.reviews USING btree (case_id);
 
 
 --
--- TOC entry 3361 (class 1259 OID 24983)
+-- TOC entry 3364 (class 1259 OID 24983)
 -- Name: idx_reviews_created_at; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1226,7 +1248,7 @@ CREATE INDEX idx_reviews_created_at ON public.reviews USING btree (created_at);
 
 
 --
--- TOC entry 3362 (class 1259 OID 24982)
+-- TOC entry 3365 (class 1259 OID 24982)
 -- Name: idx_reviews_rating; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1234,7 +1256,7 @@ CREATE INDEX idx_reviews_rating ON public.reviews USING btree (rating);
 
 
 --
--- TOC entry 3363 (class 1259 OID 24981)
+-- TOC entry 3366 (class 1259 OID 24981)
 -- Name: idx_reviews_reviewed_lawyer_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1242,7 +1264,7 @@ CREATE INDEX idx_reviews_reviewed_lawyer_id ON public.reviews USING btree (revie
 
 
 --
--- TOC entry 3364 (class 1259 OID 24980)
+-- TOC entry 3367 (class 1259 OID 24980)
 -- Name: idx_reviews_reviewer_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1250,7 +1272,7 @@ CREATE INDEX idx_reviews_reviewer_id ON public.reviews USING btree (reviewer_id)
 
 
 --
--- TOC entry 3301 (class 1259 OID 24734)
+-- TOC entry 3302 (class 1259 OID 24734)
 -- Name: idx_users_email; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1258,7 +1280,7 @@ CREATE INDEX idx_users_email ON public.users USING btree (email);
 
 
 --
--- TOC entry 3302 (class 1259 OID 24736)
+-- TOC entry 3303 (class 1259 OID 24736)
 -- Name: idx_users_is_active; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1266,7 +1288,7 @@ CREATE INDEX idx_users_is_active ON public.users USING btree (is_active);
 
 
 --
--- TOC entry 3303 (class 1259 OID 24735)
+-- TOC entry 3304 (class 1259 OID 24735)
 -- Name: idx_users_role; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1274,7 +1296,7 @@ CREATE INDEX idx_users_role ON public.users USING btree (role);
 
 
 --
--- TOC entry 3410 (class 2620 OID 24865)
+-- TOC entry 3415 (class 2620 OID 24865)
 -- Name: appointments update_appointments_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1282,7 +1304,7 @@ CREATE TRIGGER update_appointments_updated_at BEFORE UPDATE ON public.appointmen
 
 
 --
--- TOC entry 3409 (class 2620 OID 24828)
+-- TOC entry 3414 (class 2620 OID 24828)
 -- Name: cases update_cases_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1290,7 +1312,7 @@ CREATE TRIGGER update_cases_updated_at BEFORE UPDATE ON public.cases FOR EACH RO
 
 
 --
--- TOC entry 3411 (class 2620 OID 24942)
+-- TOC entry 3416 (class 2620 OID 24942)
 -- Name: documents update_documents_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1298,7 +1320,7 @@ CREATE TRIGGER update_documents_updated_at BEFORE UPDATE ON public.documents FOR
 
 
 --
--- TOC entry 3408 (class 2620 OID 24759)
+-- TOC entry 3413 (class 2620 OID 24759)
 -- Name: lawyer_profiles update_lawyer_profiles_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1306,7 +1328,7 @@ CREATE TRIGGER update_lawyer_profiles_updated_at BEFORE UPDATE ON public.lawyer_
 
 
 --
--- TOC entry 3413 (class 2620 OID 25015)
+-- TOC entry 3418 (class 2620 OID 25015)
 -- Name: payments update_payments_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1314,7 +1336,7 @@ CREATE TRIGGER update_payments_updated_at BEFORE UPDATE ON public.payments FOR E
 
 
 --
--- TOC entry 3412 (class 2620 OID 24978)
+-- TOC entry 3417 (class 2620 OID 24978)
 -- Name: reviews update_reviews_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1322,7 +1344,7 @@ CREATE TRIGGER update_reviews_updated_at BEFORE UPDATE ON public.reviews FOR EAC
 
 
 --
--- TOC entry 3407 (class 2620 OID 24733)
+-- TOC entry 3412 (class 2620 OID 24733)
 -- Name: users update_users_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1330,7 +1352,7 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public.users FOR EACH RO
 
 
 --
--- TOC entry 3388 (class 2606 OID 24850)
+-- TOC entry 3393 (class 2606 OID 24850)
 -- Name: appointments appointments_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1339,7 +1361,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 3389 (class 2606 OID 24855)
+-- TOC entry 3394 (class 2606 OID 24855)
 -- Name: appointments appointments_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1348,7 +1370,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 3390 (class 2606 OID 24860)
+-- TOC entry 3395 (class 2606 OID 24860)
 -- Name: appointments appointments_lawyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1357,25 +1379,25 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- TOC entry 3405 (class 2606 OID 41108)
+-- TOC entry 3410 (class 2606 OID 57493)
 -- Name: case_applications case_applications_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.case_applications
-    ADD CONSTRAINT case_applications_case_id_fkey FOREIGN KEY (case_id) REFERENCES public.cases(case_id);
+    ADD CONSTRAINT case_applications_case_id_fkey FOREIGN KEY (case_id) REFERENCES public.cases(case_id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 3406 (class 2606 OID 41113)
+-- TOC entry 3411 (class 2606 OID 57498)
 -- Name: case_applications case_applications_lawyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.case_applications
-    ADD CONSTRAINT case_applications_lawyer_id_fkey FOREIGN KEY (lawyer_id) REFERENCES public.users(user_id);
+    ADD CONSTRAINT case_applications_lawyer_id_fkey FOREIGN KEY (lawyer_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 3386 (class 2606 OID 24818)
+-- TOC entry 3391 (class 2606 OID 24818)
 -- Name: cases cases_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1384,7 +1406,7 @@ ALTER TABLE ONLY public.cases
 
 
 --
--- TOC entry 3387 (class 2606 OID 24823)
+-- TOC entry 3392 (class 2606 OID 24823)
 -- Name: cases cases_lawyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1393,7 +1415,7 @@ ALTER TABLE ONLY public.cases
 
 
 --
--- TOC entry 3395 (class 2606 OID 24927)
+-- TOC entry 3400 (class 2606 OID 24927)
 -- Name: documents documents_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1402,7 +1424,7 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- TOC entry 3396 (class 2606 OID 24937)
+-- TOC entry 3401 (class 2606 OID 24937)
 -- Name: documents documents_parent_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1411,7 +1433,7 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- TOC entry 3397 (class 2606 OID 24932)
+-- TOC entry 3402 (class 2606 OID 24932)
 -- Name: documents documents_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1420,7 +1442,7 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- TOC entry 3383 (class 2606 OID 24754)
+-- TOC entry 3388 (class 2606 OID 24754)
 -- Name: lawyer_profiles lawyer_profiles_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1429,7 +1451,7 @@ ALTER TABLE ONLY public.lawyer_profiles
 
 
 --
--- TOC entry 3384 (class 2606 OID 24790)
+-- TOC entry 3389 (class 2606 OID 24790)
 -- Name: lawyer_specializations lawyer_specializations_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1438,7 +1460,7 @@ ALTER TABLE ONLY public.lawyer_specializations
 
 
 --
--- TOC entry 3385 (class 2606 OID 24795)
+-- TOC entry 3390 (class 2606 OID 24795)
 -- Name: lawyer_specializations lawyer_specializations_specialization_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1447,7 +1469,7 @@ ALTER TABLE ONLY public.lawyer_specializations
 
 
 --
--- TOC entry 3391 (class 2606 OID 24885)
+-- TOC entry 3396 (class 2606 OID 24885)
 -- Name: messages messages_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1456,7 +1478,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 3392 (class 2606 OID 24900)
+-- TOC entry 3397 (class 2606 OID 24900)
 -- Name: messages messages_parent_message_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1465,7 +1487,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 3393 (class 2606 OID 24895)
+-- TOC entry 3398 (class 2606 OID 24895)
 -- Name: messages messages_receiver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1474,7 +1496,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 3394 (class 2606 OID 24890)
+-- TOC entry 3399 (class 2606 OID 24890)
 -- Name: messages messages_sender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1483,7 +1505,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 3404 (class 2606 OID 25035)
+-- TOC entry 3409 (class 2606 OID 25035)
 -- Name: notifications notifications_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1492,7 +1514,7 @@ ALTER TABLE ONLY public.notifications
 
 
 --
--- TOC entry 3401 (class 2606 OID 25000)
+-- TOC entry 3406 (class 2606 OID 25000)
 -- Name: payments payments_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1501,7 +1523,7 @@ ALTER TABLE ONLY public.payments
 
 
 --
--- TOC entry 3402 (class 2606 OID 25005)
+-- TOC entry 3407 (class 2606 OID 25005)
 -- Name: payments payments_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1510,7 +1532,7 @@ ALTER TABLE ONLY public.payments
 
 
 --
--- TOC entry 3403 (class 2606 OID 25010)
+-- TOC entry 3408 (class 2606 OID 25010)
 -- Name: payments payments_lawyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1519,7 +1541,7 @@ ALTER TABLE ONLY public.payments
 
 
 --
--- TOC entry 3398 (class 2606 OID 24963)
+-- TOC entry 3403 (class 2606 OID 24963)
 -- Name: reviews reviews_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1528,7 +1550,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 3399 (class 2606 OID 24973)
+-- TOC entry 3404 (class 2606 OID 24973)
 -- Name: reviews reviews_reviewed_lawyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1537,7 +1559,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- TOC entry 3400 (class 2606 OID 24968)
+-- TOC entry 3405 (class 2606 OID 24968)
 -- Name: reviews reviews_reviewer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1545,7 +1567,7 @@ ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT reviews_reviewer_id_fkey FOREIGN KEY (reviewer_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
--- Completed on 2025-08-11 21:38:21
+-- Completed on 2025-08-17 15:41:20
 
 --
 -- PostgreSQL database dump complete

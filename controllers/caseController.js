@@ -12,7 +12,7 @@ exports.getAllCases = catchAsync(async (req, res) => {
 
 //this route is hit by the client to post his case
 exports.postCase = catchAsync(async (req, res) => {
-  const id = 21; // client ID later replace by req.user.id
+  const id = req.user.user_id;
   const result = await query.postCase(id, req.body);
   res.status(200).json({
     status: 'success',
@@ -22,11 +22,11 @@ exports.postCase = catchAsync(async (req, res) => {
 });
 
 // this route is used by the lawyer to get specific case on the list
-exports.getCase = catchAsync(async (req, res) => {
+exports.getCase = catchAsync(async (req, res, next) => {
   const id = req.params.caseId * 1;
   const result = await query.getCase(id);
   if (!result) {
-    throw new AppError('No case found with that ID', 404);
+    return next(new AppError('No case found with that ID', 404));
   }
   res.status(200).json({
     status: 'success',
@@ -35,7 +35,7 @@ exports.getCase = catchAsync(async (req, res) => {
 });
 
 // this also hit by the client to update his case.
-exports.updateCase = catchAsync(async (req, res) => {
+exports.updateCase = catchAsync(async (req, res, next) => {
   // case id need not to be secured and sendt through url params
   const id = Number(req.params.caseId);
 
@@ -67,7 +67,7 @@ exports.updateCase = catchAsync(async (req, res) => {
   const result = await query.updateCase(updates, values, id);
 
   if (!result) {
-    throw new AppError('No case found with that ID', 404);
+    return next(new AppError('No case found with that ID', 404));
   }
 
   res.status(201).json({
@@ -77,15 +77,15 @@ exports.updateCase = catchAsync(async (req, res) => {
 });
 
 // this route is used by the client to delete.
-exports.deleteCase = catchAsync(async (req, res) => {
+exports.deleteCase = catchAsync(async (req, res, next) => {
   const id = req.params.caseId * 1;
   // Ensure deletable state using model-level guard
   await query.canDeleteCase(id);
   const result = await query.deleteCase(id);
   if (!result) {
-    throw new AppError('No case found with that ID', 404);
+    return next(new AppError('No case found with that ID', 404));
   }
-  res.status(202).json({
+  res.status(204).json({
     status: 'success',
     message: 'successfully deleted',
   });
@@ -93,15 +93,17 @@ exports.deleteCase = catchAsync(async (req, res) => {
 
 exports.postReview = catchAsync(async (req, res) => {
   const caseId = req.params.caseId * 1;
-  const reviewerId = 22; // Assuming req.user.id is the client ID
-  const result = await query.postReview(caseId, {
-    ...req.body,
+  const reviewerId = req.user.user_id;
+  
+  const result = await query.postReview(
+    caseId,
+    {
+      ...req.body,
+    },
     reviewerId,
-  });
+  );
   res.status(201).json({
     status: 'success',
-    data: {
-      result,
-    },
+    data: result,
   });
 });

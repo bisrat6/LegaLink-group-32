@@ -198,12 +198,6 @@ const reviewSchema = Joi.object({
     'string.max': 'Review comment cannot exceed 1000 characters',
     'any.required': 'Review comment is required',
   }),
-  reviewerId: Joi.number().integer().min(1).required().messages({
-    'number.base': 'Reviewer ID must be a number',
-    'number.integer': 'Reviewer ID must be an integer',
-    'number.min': 'Reviewer ID must be positive',
-    'any.required': 'Reviewer ID is required',
-  }),
 });
 
 exports.validateReview = (req, res, next) => {
@@ -288,12 +282,6 @@ exports.authorizeCaseAccess = (operation) => {
         status: 'fail',
         message: 'Only clients can create cases',
       });
-    }
-
-    // For other operations, check case ownership or assignment
-    if (['read', 'update', 'delete', 'review'].includes(operation)) {
-      // This will be implemented in the controller after fetching case details
-      return next();
     }
 
     next();
