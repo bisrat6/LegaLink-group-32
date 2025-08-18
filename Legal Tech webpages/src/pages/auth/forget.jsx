@@ -1,34 +1,42 @@
-import React, {useState} from 'react'
-import '../../assets/styles/authentication/signup.css'
+import React, { useState } from 'react';
+import '../../assets/styles/authentication/forget.css';
 import Header from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
-import '../../assets/styles/authentication/forget.css'
 
-function Forget(){
-const [email, setEmail] = useState('');
+function Forget() {
+  const [email, setEmail] = useState('');
 
-return (
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Reset link sent to ${email}!`);
+    setEmail('');
+  };
+
+  return (
     <>
-    <Header />
-     <div className='forget-div'>
-       
-        <form >
-             <h2>Forget Password</h2>
-        <p>Enter your email adddress to reset your password.</p>
-            <div className='forget-input'>
- <label htmlFor="Email">Email</label>
-            <input type="text" placeholder='Enter your email' className='forget-input' />
-            </div>
-          
-           <a href="" className='reset-link'>Send Reset Link</a>
-           <a href="/login" className='back-login'>Back to Login</a>
+      <Header />
+      <div className="forget-div">
+        <form onSubmit={handleSubmit}>
+          <h2>Forget Password</h2>
+          <p>Enter your email address to reset your password.</p>
+          <div className="forget-input">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="data-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="reset-link">Send Reset Link</button>
+          <a href="/login" className="back-login">Back to Login</a>
         </form>
-    </div>
-    <Footer />
+      </div>
+      <Footer />
     </>
-   
-);
+  );
 }
 
-
-export default Forget
+export default Forget;

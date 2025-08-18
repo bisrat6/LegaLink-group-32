@@ -1,48 +1,79 @@
-
-.forget-div{
-
+.forget-div {
+  max-width: 400px;
+  margin: 50px auto;
   padding: 20px;
+  background-color: #fff;
   border-radius: 8px;
-  color: black;
-  width: 100%;
-height: auto;
-   display: flex;
-    justify-content: center;
-    align-items: center;
-    vertical-align: center;
-    min-height: 100vh; 
-   margin-top: -70px;
-    
-    
-}
-form {
-   background: white; 
-   padding: 40px;
-   border-radius: 30px;
-   width: 350px;
-}
-h2, p {
-    text-align: center;
-}
-.forget-input{
-    width: 320px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
 }
 
-.reset-link, .back-login{
-color: blue;
-text-decoration: none;
-display: block;
-text-align: center;
-margin-top: 10px;
+.forget-div h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
 }
-.reset-link:hover{
-    color: rgb(2, 206, 2);
+
+.forget-div p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
 }
-.back-login{
-    color: red;
-    margin-top: 15px;
+
+.forget-input {
+  margin-bottom: 15px;
 }
-.back-login:hover{
-   text-decoration: underline;
-   color: red;
+
+.forget-input label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: bold;
+}
+
+.data-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.reset-link {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #dc3545;
+  color: white;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.reset-link:hover {
+  background-color: #c82333;
+}
+
+.back-login {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-login:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .forget-div {
+    margin: 20px;
+    padding: 15px;
+  }
 }

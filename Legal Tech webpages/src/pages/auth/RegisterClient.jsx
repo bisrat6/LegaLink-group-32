@@ -4,27 +4,17 @@ import Header from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 
 function SignUp() {
-  const [role, setRole] = useState('client'); // Default to client
+  const [role, setRole] = useState('client');
   const [name, setName] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [experience, setExperience] = useState('');
 
-  // Handle form submit
   const handleSubmit = (e) => {
-    e.preventDefault(); // Stop page reload
-
-    // Here you could send the data to your backend
-    console.log({
-      name,
-      userName,
-      password,
-      role,
-      experience,
-    });
-
-    // Show success alert
-    alert('🎉 You registered successfully!');
+    e.preventDefault();
+    localStorage.setItem('user', JSON.stringify({ name, userName, role, experience }));
+    alert('🎉 You registered successfully! Redirecting to login...');
+    window.location.href = '/login';
   };
 
   return (
@@ -35,7 +25,6 @@ function SignUp() {
           <h2>Sign Up</h2>
           <p>Create your account</p>
 
-          {/* Name */}
           <div className="div-input">
             <label htmlFor="name">Name</label>
             <input
@@ -48,7 +37,6 @@ function SignUp() {
             />
           </div>
 
-          {/* Email */}
           <div className="div-input">
             <label htmlFor="email">Email</label>
             <input
@@ -61,7 +49,6 @@ function SignUp() {
             />
           </div>
 
-          {/* Password */}
           <div className="div-input">
             <label htmlFor="password">Password</label>
             <input
@@ -74,7 +61,6 @@ function SignUp() {
             />
           </div>
 
-          {/* Role Selection */}
           <div className="div-input">
             <label>Account Type:</label>
             <div className="radio-group">
@@ -99,16 +85,15 @@ function SignUp() {
             </div>
           </div>
 
-          {/* Extra Fields for Lawyer */}
           {role === 'lawyer' && (
             <>
               <div className="div-input">
                 <label>Certificate</label>
-                <input type="file" className="data-input" />
+                <input type="file" className="data-input" accept=".pdf,.docx" />
               </div>
               <div className="div-input">
                 <label>National ID</label>
-                <input type="file" className="data-input" />
+                <input type="file" className="data-input" accept=".pdf,.jpg,.png" />
               </div>
               <div className="div-input">
                 <label>Years of Experience</label>
@@ -118,6 +103,7 @@ function SignUp() {
                   className="data-input"
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
+                  min="0"
                 />
               </div>
             </>
@@ -126,9 +112,7 @@ function SignUp() {
           <button className="signup-button" type="submit">Sign Up</button>
           <p>
             Already have an account?
-            <a href="/login" className="login-link">
-              Log in
-            </a>
+            <a href="/login" className="login-link">Log in</a>
           </p>
         </form>
       </div>

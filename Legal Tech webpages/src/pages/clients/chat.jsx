@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import '../../assets/styles/client homepage/chat.css';
-import DashboardNavbar from '../components/DashBoard Navbar.jsx';
 import io from "socket.io-client";
-
-const socket = io("http://localhost:5000"); // Backend server URL
+import ClientNavbar from "../components/clientNavbar";
+import Footer from '../components/Footer'
+const socket = io("http://localhost:5000"); // Replace with real backend URL for production
 
 function Chat({ userId }) {
   const [message, setMessage] = useState("");
@@ -36,28 +36,30 @@ function Chat({ userId }) {
 
   return (
     <>
-    <DashboardNavbar />
-    <div className="chat-container">
-      <div className="messages">
-        {messages.map((msg, i) => (
-          <div key={i} className={msg.sender === userId ? "my-msg" : "their-msg"}>
-            <p>{msg.text}</p>
-            <span>{msg.time}</span>
-          </div>
-        ))}
-      </div>
+      <ClientNavbar />
+      <div className="chat-container">
+        <div className="messages">
+          {messages.map((msg, i) => (
+            <div key={i} className={msg.sender === userId ? "my-msg" : "their-msg"}>
+              <p>{msg.text}</p>
+              <span>{msg.time}</span>
+            </div>
+          ))}
+        </div>
 
-      <div className="input-box">
-        <input
-          type="text"
-          value={message}
-          placeholder="Type your message..."
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={sendMessage}>Send</button>
+        <div className="input-box">
+          <input
+            type="text"
+            value={message}
+            placeholder="Type your message..."
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <button onClick={sendMessage}>Send</button>
+        </div>
       </div>
-    </div>
+      <Footer />
     </>
   );
 }
-export default Chat
+
+export default Chat;

@@ -1,0 +1,86 @@
+.caseFeedContainer {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  margin-top: 80px;
+  border: 1px solid rgb(181, 180, 180);
+}
+
+.caseFeedContainer h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.caseCard {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  border: 1px solid lightgray;
+}
+
+.caseCard h3 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.caseCard p {
+  color: #333;
+  margin: 5px 0;
+}
+
+.commentsSection {
+  margin-top: 15px;
+}
+
+.commentsSection h4 {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.commentItem {
+  background-color: #e9ecef;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.commentInput {
+  width: 70%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.commentButton {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.commentButton:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .commentInput {
+    width: 60%;
+  }
+}

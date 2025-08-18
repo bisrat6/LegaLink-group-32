@@ -1,0 +1,168 @@
+.scheduleContainer {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  margin-top: 80px;
+}
+
+.scheduleContainer h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.appointmentList {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.appointmentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.appointmentItem.active {
+  background-color: #e3f2fd;
+}
+
+.appointmentItem.cancelled {
+  background-color: #f8d7da;
+  opacity: 0.8;
+}
+
+.appointmentInfo {
+  color: #333;
+}
+
+.statusLabel {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.statusLabel.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.statusLabel.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.statusLabel.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.toggleButton {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggleButton.active {
+  background-color: #dc3545;
+  color: white;
+}
+
+.toggleButton.cancelled {
+  background-color: #28a745;
+  color: white;
+}
+
+.toggleButton:hover {
+  opacity: 0.9;
+}
+
+.todoContainer {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todoInputGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.todoInputGroup input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-task {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-task:hover {
+  background-color: #0056b3;
+}
+
+.taskList {
+  list-style: none;
+  padding: 0;
+}
+
+.taskList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+}
+
+.completedTask {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.todoActions button {
+  padding: 5px 10px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.todoActions button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.todoActions button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .appointmentItem {
+    flex-direction: column;
+    text-align: center;
+  }
+  .toggleButton {
+    margin-top: 10px;
+  }
+}

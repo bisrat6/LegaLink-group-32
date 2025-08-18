@@ -1,0 +1,97 @@
+.dashboardContainer {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  margin-top: 90px;
+}
+.profilePic:hover{
+  border: 3px solid white;
+}
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.profilePic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.lawyerName {
+  color: #333;
+  font-size: 24px;
+}
+
+.dashboardMain {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profilePage {
+  padding: 20px;
+}
+
+.backButton {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.backButton:hover {
+  background-color: #5a6268;
+}
+
+.profileDetailImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.profileDescription {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.contactInfo p {
+  color: #333;
+  margin: 5px 0;
+}
+
+.caseListSection h2 {
+  color: #007bff;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.caseCard {
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .dashboardHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+  .profilePic {
+    margin-bottom: 10px;
+  }
+}

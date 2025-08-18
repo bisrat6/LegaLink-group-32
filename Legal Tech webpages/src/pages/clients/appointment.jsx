@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../../assets/styles/client homepage/appointment.css";
-import DashboardNavbar from '../components/DashBoard Navbar.jsx';
+import ClientNavbar from "../components/clientNavbar";
+import Footer from '../components/Footer'
 
 function Appointment() {
   const [appointments] = useState([
@@ -26,33 +27,34 @@ function Appointment() {
       status: "Cancelled"
     }
   ]);
+  // TODO: Fetch appointments from backend
 
   return (
-     <>
-      <DashboardNavbar />
-       <div className="appointment-container">
-      <h2>My Appointments</h2>
+    <>
+      <ClientNavbar />
+      <div className="appointment-container">
+        <h2>My Appointments</h2>
 
-      {appointments.length === 0 ? (
-        <p className="no-appointments">No appointments scheduled.</p>
-      ) : (
-        <div className="appointment-list">
-          {appointments.map((appt, index) => (
-            <div key={index} className="appointment-card">
-              <h3>{appt.lawyer}</h3>
-              <p><strong>Date:</strong> {appt.date}</p>
-              <p><strong>Time:</strong> {appt.time}</p>
-              <p><strong>Type:</strong> {appt.type}</p>
-              <span className={`status ${appt.status.toLowerCase()}`}>
-                {appt.status}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-     </>
-   
+        {appointments.length === 0 ? (
+          <p className="no-appointments">No appointments scheduled.</p>
+        ) : (
+          <div className="appointment-list">
+            {appointments.map((appt, index) => (
+              <div key={index} className="appointment-card">
+                <h3>{appt.lawyer}</h3>
+                <p><strong>Date:</strong> {appt.date}</p>
+                <p><strong>Time:</strong> {appt.time}</p>
+                <p><strong>Type:</strong> {appt.type}</p>
+                <span className={`status ${appt.status.toLowerCase()}`}>
+                  {appt.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 }
 

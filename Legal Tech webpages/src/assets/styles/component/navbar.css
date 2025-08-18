@@ -1,18 +1,15 @@
 
 .logo{
-    height: 80px;
-   width: 80px;
-   border-radius: 50%;
+    height: 200px;
+   width: 200px;
+   border-radius: 70%;
+   
    
 }
 .logo-container{
     width: 250px;
-   
     display: flex;
-    flex-direction: row;
-  
-    
-    
+    flex-direction: row;  
 }
 .logo-title{
     margin-top: -10px;

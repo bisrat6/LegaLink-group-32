@@ -1,56 +1,54 @@
-.sec-page1{
-  height: 100vh;
-  background-image: 
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url('../../images/background5.avif');
-  background-size: cover;
-  background-position: center;
-  color: white;
-  height: 500px;
-  background-color: transparent;
-  
-}
-section{
-background-image: none;
-    background-color: rgb(234, 233, 233);
-    height: 500px;
-    color: rgb(0, 0, 0);
-    font-family: roboto;
-    
-}
-.section-grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-.sec-page1 h1{
-    font-size: 5rem;
-    font-weight: bold;
-    margin-top: 200px;
-
-}
-.sec-page2 h2{
-    
-    font-size: 3rem;
-    padding: 50px 0 20px 30px ;
-}
-.sec-page2 h5{
-    margin-left: 30px;
-    font-size: 18px;
-}
-.sec-page2 p{
-    margin-left: 30px;
-    font-size: 16px;
-}
-.why-choose{
-    background-color: white;
-    
-}
-/* about.css */
-.sec-page2 img {
-  
-  height: 450px;
-  display: block;       /* Prevent inline gaps */
-  margin-bottom: 20px;  /* Space after image */
+.sec-page1 {
+  background-color: #f4f7fa;
+  padding: 50px 20px;
+  text-align: center;
 }
 
+.sec-page1 h1 {
+  color: #333;
+  font-size: 36px;
+}
 
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.section-grid h2 {
+  color: #007bff;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.section-grid h5 {
+  color: #666;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.section-grid p {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.div-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .section-grid {
+    grid-template-columns: 1fr;
+  }
+  .sec-page1 h1 {
+    font-size: 28px;
+  }
+}

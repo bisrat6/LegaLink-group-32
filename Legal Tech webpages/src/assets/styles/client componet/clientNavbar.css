@@ -1,0 +1,68 @@
+.dashboard-navbar {
+  background-color: #007bff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  font-family: 'Arial', sans-serif;
+}
+
+.dashboard-navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  transition: background-color 0.3s;
+}
+
+.dashboard-navbar a:hover {
+  background-color: #0056b3;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+   .nav-toggle {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+  }
+  .nav-links.open {
+    display: flex;
+  }
+  .logout-button {
+    width: 100%;
+    text-align: left;
+  }
+}
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+}
+
+.nav-links li {
+  margin: 0 10px;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: #fff; /* Match your navbar link color */
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.logout-button:hover {
+  text-decoration: underline; /* Or match your link hover style */
+}

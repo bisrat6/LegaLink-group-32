@@ -1,51 +1,59 @@
 import React, { useState } from "react";
 import "../../assets/styles/client homepage/search.css";
-import DashboardNavbar from '../components/DashBoard Navbar.jsx';
+import ClientNavbar from "../components/clientNavbar";
+import Footer from '../components/Footer'
 
 function SearchLawyer() {
   const [location, setLocation] = useState("");
   const [caseType, setCaseType] = useState("");
   const [results, setResults] = useState([]);
 
-   const handleSearch = () => {
-    // For now, just a placeholder
+  const handleSearch = () => {
+    // TODO: Integrate with backend API for real search
+    // For demo, use placeholder data
     setResults([
       { name: "John Doe", location: "Addis Ababa", type: "Criminal" },
-      { name: "Sara Smith", location: "Mekelle", type: "Family" }
+      { name: "Sara Smith", location: "Mekelle", type: "Family" },
+      { name: "Abel Birhanu", location: "Bahrdar", type: "Social Harassment" },
+      { name: "Sara Tesfaye", location: "Harari", type: "Guardianship" }
     ]);
   };
 
   return (
     <>
-    <DashboardNavbar />
-    <div className="search-lawyer">
-      <h2>Find a Lawyer</h2>
-      <div className="search-filters">
-        <input
-          type="text"
-          placeholder="Enter location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-        <select value={caseType} onChange={(e) => setCaseType(e.target.value)}>
-          <option value="">Select Case Type</option>
-          <option value="Criminal">Criminal</option>
-          <option value="Family">Family</option>
-          <option value="Business">Business</option>
-        </select>
-        <button onClick={handleSearch}>Search</button>
-      </div>
+      <ClientNavbar />
+      <div className="search-lawyer">
+        <h2>Find a Lawyer</h2>
+        <div className="search-filters">
+          <input
+            type="text"
+            placeholder="Enter location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          <select value={caseType} onChange={(e) => setCaseType(e.target.value)}>
+            <option value="">Select Case Type</option>
+            <option value="Criminal">Criminal</option>
+            <option value="Family">Family</option>
+            <option value="Business">Business</option>
+            <option value="Guardianship">Guardianship</option>
+            <option value="Discrimination">Discrimination</option>
+            <option value="Social Harassment">Social Harassment</option>
+          </select>
+          <button onClick={handleSearch}>Search</button>
+        </div>
 
-      <div className="results">
-        {results.map((lawyer, i) => (
-          <div key={i} className="lawyer-card">
-            <h4>{lawyer.name}</h4>
-            <p >{lawyer.location}</p>
-            <p >Type: {lawyer.type}</p>
-          </div>
-        ))}
+        <div className="results">
+          {results.map((lawyer, i) => (
+            <div key={i} className="lawyer-card">
+              <h4>{lawyer.name}</h4>
+              <p>{lawyer.location}</p>
+              <p>Type: {lawyer.type}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      <Footer />
     </>
   );
 }
