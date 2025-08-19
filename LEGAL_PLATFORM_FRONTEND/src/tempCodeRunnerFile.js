@@ -1,0 +1,1 @@
+if (!socket && userId)

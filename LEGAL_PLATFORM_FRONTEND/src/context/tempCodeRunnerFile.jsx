@@ -1,0 +1,1 @@
+ const storedResponse = JSON.parse(localStorage.getItem("authResponse"));
