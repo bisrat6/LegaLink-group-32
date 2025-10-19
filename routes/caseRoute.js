@@ -11,6 +11,7 @@ router
   .route('/')
   .get(
     authController.protect,
+    authController.restrictTo('lawyer'),
     caseValidation.validateCaseQuery,
     caseController.getAllCases,
   )
